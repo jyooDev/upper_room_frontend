@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router";
 import { Link } from "react-scroll";
+import { Link as L } from 'react-router'
 
 export const HomeNavBar = () => {
   const navigate = useNavigate();
@@ -34,8 +35,16 @@ export const HomeNavBar = () => {
               </li>
             </ul>
             <div className="flex items-center justify-center gap-5">
-              <div className="flex items-center space-x-4"><button className="px-4 py-2 text-sm font-medium rounded-md text-white border-2 border-primary  bg-primary hover:border-primary hover:bg-primary">Sign In</button></div>
-              <div className="flex items-center space-x-4"><button className="px-4 py-2 text-sm font-medium rounded-md border-primary bg-white border-2 hover:bg-gray-200">Sign up</button></div>
+              <div className="flex items-center space-x-4">
+                <L to='/login'>
+                  <button className="px-4 py-2 text-sm font-medium rounded-md text-white border-2 border-primary  bg-primary hover:border-primary hover:bg-primary">Sign In</button>
+                </L>
+              </div>
+              <div className="flex items-center space-x-4">
+                <L to='/signup'>
+                  <button className="px-4 py-2 text-sm font-medium rounded-md border-primary bg-white border-2 hover:bg-gray-200">Sign up</button>
+                </L>
+              </div>
             </div>
           </div>
         </div>
