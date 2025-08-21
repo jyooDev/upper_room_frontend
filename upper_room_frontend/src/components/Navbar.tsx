@@ -37,7 +37,7 @@ export const HomeNavBar = () => {
             <div className="flex items-center justify-center gap-5">
               <div className="flex items-center space-x-4">
                 <L to='/login'>
-                  <button className="px-4 py-2 text-sm font-medium rounded-md text-white border-2 border-primary  bg-primary hover:border-primary hover:bg-primary">Sign In</button>
+                  <button className="px-4 py-2 text-sm font-medium rounded-md text-white border-2 border-primary  bg-primary hover:border-primary-100 hover:bg-primary-100">Sign In</button>
                 </L>
               </div>
               <div className="flex items-center space-x-4">

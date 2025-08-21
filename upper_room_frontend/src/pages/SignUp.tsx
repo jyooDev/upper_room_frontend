@@ -5,13 +5,10 @@ import { Link as L } from 'react-router'
 import bible  from '../assets/hero-page/feature-bible.jpg'
 import googleLogo from '../assets/google-logo.png'
 import { FaEye, FaEyeSlash } from 'react-icons/fa'
-export const SignIn = () => {
+export const SignUp = () => {
 
     const [showPassword, setShowPassword] = useState<boolean>(false);
-
-    const handleTogglePassword = () => {
-        setShowPassword(prev => !prev);
-    }
+    const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
 
     const handleSubmit = (e : FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -31,7 +28,7 @@ export const SignIn = () => {
                     {/* Right side */}
                     <div className='w-full lg:w-1/2'>
                         <div className='flex flex-col px-10 gap-3'>
-                            <h3 className='w-full flex justify-center items-center text-3xl text-gray-700 my-3 font-semibold'>Sign in to your account</h3>                        
+                            <h3 className='w-full flex justify-center items-center text-3xl text-gray-700 my-3 font-semibold'>Create your account</h3>                        
                             
                             <form onSubmit={handleSubmit}>
                                 <div className='my-4'>
@@ -42,17 +39,19 @@ export const SignIn = () => {
                                     <label className='block text-gray-700'>Password</label>
                                     <div className='relative'>
                                         <input className='w-full px-4 py-2 border border-gray-300 rounded outline-none placeholder:text-sm placeholder:text-gray-600' placeholder='Enter your password' type={showPassword ? 'text' : 'password'}/>
-                                        <button onClick={handleTogglePassword} className='absolute top-3 bottom-3 right-5 text-gray-600 hover:text-gray-700 cursor-pointer'>
+                                        <button onClick={() => setShowPassword(!showPassword)} className='absolute top-3 bottom-3 right-5 text-gray-600 hover:text-gray-700 cursor-pointer'>
                                             {showPassword ? <FaEyeSlash/> : <FaEye/>}
                                         </button>
                                     </div>
                                 </div>
-                                <div className='my-4 flex items-center justify-between'>
-                                    <div className='flex items-center gap-2'>
-                                        <input type="checkbox" name="" id="" />
-                                        <span className='text-gray-700 font-semibold text-sm '>Remember Me</span>
+                                <div className='my-4'>
+                                    <label className='block text-gray-700'>Confirm Password</label>
+                                    <div className='relative'>
+                                        <input className='w-full px-4 py-2 border border-gray-300 rounded outline-none placeholder:text-sm placeholder:text-gray-600' placeholder='Enter your password' type={showConfirmPassword ? 'text' : 'password'}/>
+                                        <button onClick={() => setShowConfirmPassword(!showConfirmPassword)} className='absolute top-3 bottom-3 right-5 text-gray-600 hover:text-gray-700 cursor-pointer'>
+                                            {showConfirmPassword ? <FaEyeSlash/> : <FaEye/>}
+                                        </button>
                                     </div>
-                                    <a className='text-blue-600 hover:underline text-sm' href="#">Forget Password</a>
                                 </div>
                                 <div className='my-4'>
                                     <button className='flex items-center justify-center w-full py-3 bg-primary border border-gray-300 rounded text-white cursor-pointer'>
@@ -68,14 +67,14 @@ export const SignIn = () => {
                             <div className='my-4'>
                                 <button className='w-full flex items-center justify-center gap-2 px-2 py-2 border border-gray-300 rounded'>
                                     <img src={googleLogo} alt="google-login" className='w-8'/>
-                                    <span>Google</span>
+                                    <span>Sign up with Google</span>
                                 </button>
                             </div>
                             <div className='my-4'>
                                 <div className='flex w-full items-center justify-center gap-2'>
-                                    <span className='text-gray-700 text-xs'>Don't have account</span>
-                                    <L to='/signup'>
-                                        <span className='text-blue-500 hover:underline text-xs'>Create an account</span>
+                                    <span className='text-gray-700 text-xs'>Have account</span>
+                                    <L to='/login'>
+                                        <span className='text-blue-500 hover:underline text-xs'>Login</span>
                                     </L>
                                 </div>
                             </div>
