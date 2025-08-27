@@ -1,13 +1,12 @@
-import { signOut } from "firebase/auth";
-import { auth } from "../main";
 import { useNavigate } from "react-router";
+import { signout } from "../firebase/firebase-auth";
 
 const useLogout = () => {
   const navigate = useNavigate();
 
   const logout = async () => {
     try {
-      await signOut(auth);
+      await signout();
       navigate("/");
     } catch (error) {
       console.error("Logout failed:", error);
