@@ -33,7 +33,6 @@ const ProfileDropdown = () => {
   const userInfo = user.displayName || "U";
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
   const logout = useLogout();
-  console.log(showDropdown);
   return (
     <div className="relative inline-block" ref={dropdownRef}>
       <div className="flex justify-center items-center w-18 h-18">
