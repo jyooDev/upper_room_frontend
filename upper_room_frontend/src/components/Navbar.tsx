@@ -6,7 +6,7 @@ import { useLogger } from "../hooks";
 import { useAuthContext } from "../contexts/auth-context";
 import { ProfileDropdown } from ".";
 
-export const HomeNavBar = () => {
+const HomeNavBar = () => {
   const logger = useLogger("src/components/Navbar.tsx");
   const { isLoggedIn, isLoading } = useAuthContext();
   const navigate = useNavigate();
@@ -71,3 +71,5 @@ export const HomeNavBar = () => {
     </nav>
   );
 };
+
+export default HomeNavBar;
