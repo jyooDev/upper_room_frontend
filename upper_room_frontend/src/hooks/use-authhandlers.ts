@@ -1,7 +1,7 @@
 import { useAppDispatch } from ".";
 import type { User } from "firebase/auth";
 
-import { setUser, clearUser } from "../store/userSlice";
+import { setUser, clearUser } from "../store/user-slice";
 import { useAuthContext } from "../contexts/auth-context";
 
 import { userExists, createUser } from "../services/user-service";

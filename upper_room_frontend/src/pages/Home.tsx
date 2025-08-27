@@ -1,14 +1,10 @@
-import { HomeNavBar } from "../components/Navbar";
-import { Hero } from "../components/Hero";
-import { Community } from "../components/Community";
-import { Features } from "../components/Features";
-import { Contact } from "../components/Contact";
+import { Navbar, Hero, Feature, Contact, Community } from "../components";
 const Home = () => {
   return (
     <>
-      <HomeNavBar />
+      <Navbar />
       <Hero />
-      <Features />
+      <Feature />
       <Community />
       <Contact />
     </>
