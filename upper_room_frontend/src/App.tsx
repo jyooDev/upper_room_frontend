@@ -1,21 +1,16 @@
-import React from "react";
-import { Route, Routes } from "react-router";
-import { Home, SignIn, SignUp } from "./pages";
+import AppRouter from "./routes/index";
 
-import { useAuthListener, useAuthHandlers } from "./hooks";
+// import { useAuthListener, useAuthHandlers } from "./hooks";
+import { AuthContextProvider } from "./contexts";
 
 function App() {
-  const { loggedInCallback, loggedOutCallback } = useAuthHandlers();
-  useAuthListener(loggedInCallback, loggedOutCallback);
-
   return (
     <div>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<SignIn />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="*" element={<Home />} />
-      </Routes>
+      {/* browerser router here */}
+      <AuthContextProvider>
+        {/* redux provider to be insude of context */}
+        <AppRouter />
+      </AuthContextProvider>
     </div>
   );
 }

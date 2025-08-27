@@ -9,6 +9,8 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { createUser } from "../firebase/firebase-auth";
 import { useLogger } from "../hooks";
 
+import { useNavigate } from "react-router";
+
 const SignUp = () => {
   // state
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -18,6 +20,7 @@ const SignUp = () => {
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
 
+  const navigate = useNavigate();
   // hooks
   const logger = useLogger("src/pages/SignUp.tsx");
 
@@ -43,7 +46,7 @@ const SignUp = () => {
     // step 3. call createUser with email and password
     await createUser(email, password);
 
-    return;
+    return navigate("/");
   };
 
   return (

@@ -1,6 +1,7 @@
 import React, { type FormEvent } from "react";
 import { useState } from "react";
 import { Link as L } from "react-router";
+import { useNavigate } from "react-router";
 
 import bible from "../assets/hero-page/feature-bible.jpg";
 import googleLogo from "../assets/google-logo.png";
@@ -8,17 +9,31 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 import logger from "../utils/logger";
 
+import { login } from "../firebase/firebase-auth";
+
+/**
+ * 1. set states for email and password
+ * 2. set value and onChange in email input and password input
+ * 3. in submit method check that values are not empty strings
+ * 4. call login with email and password
+ */
+
 const SignIn = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+
+  const navigate = useNavigate();
 
   const handleTogglePassword = () => {
     setShowPassword((prev) => !prev);
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    return;
+    if (email === "" || password === "") return alert("Check Input Values...");
+    await login(email, password);
+    return navigate("/");
   };
 
   return (
@@ -47,8 +62,9 @@ const SignIn = () => {
                   </label>
                   <input
                     className="w-full px-4 py-2 border border-gray-300 rounded outline-none placeholder:text-sm placeholder:text-gray-600"
-                    placeholder="Enter your username or email address"
+                    placeholder="Enter your email address"
                     type="text"
+                    onChange={(e) => setEmail(e.target.value)}
                   />
                 </div>
                 <div className="my-4">
@@ -58,6 +74,7 @@ const SignIn = () => {
                       className="w-full px-4 py-2 border border-gray-300 rounded outline-none placeholder:text-sm placeholder:text-gray-600"
                       placeholder="Enter your password"
                       type={showPassword ? "text" : "password"}
+                      onChange={(e) => setPassword(e.target.value)}
                     />
                     <button
                       onClick={handleTogglePassword}
