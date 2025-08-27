@@ -11,9 +11,6 @@ export const HomeNavBar = () => {
   const { isLoggedIn, isLoading } = useAuthContext();
   const navigate = useNavigate();
 
-  logger.debug("isLoading - ", isLoading);
-  if (isLoading) return null;
-
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-neutral-200">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -44,7 +41,9 @@ export const HomeNavBar = () => {
             </li>
           </ul>
           <div className="flex items-center justify-center gap-5">
-            {isLoggedIn ? (
+            {isLoading ? (
+              <div></div>
+            ) : isLoggedIn ? (
               <div className="flex items-center space-x-4">
                 <button
                   onClick={logout}
