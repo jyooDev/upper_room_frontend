@@ -4,6 +4,8 @@ import { createContext, useState, useContext } from "react";
 interface IAuthContext {
   isLoggedIn: boolean;
   isLoading: boolean;
+  userRole: "MEMBER" | "ORGANIZER" | "ADMIN";
+  setUserRole: (role: "MEMBER" | "ORGANIZER" | "ADMIN") => void;
   login: () => void;
   logout: () => void;
 }
@@ -12,6 +14,8 @@ interface IAuthContext {
 export const AuthContext = createContext<IAuthContext>({
   isLoggedIn: false,
   isLoading: true,
+  userRole: "MEMBER",
+  setUserRole: () => {},
   login: () => {},
   logout: () => {},
 });
@@ -19,10 +23,13 @@ export const AuthContext = createContext<IAuthContext>({
 // made use context to use throughout app
 export const useAuthContext = () => {
   const context = useContext(AuthContext);
-  const { isLoggedIn, login, logout, isLoading } = context;
+  const { isLoggedIn, userRole, isLoading, login, logout, setUserRole } =
+    context;
   return {
     isLoggedIn,
     isLoading,
+    userRole,
+    setUserRole,
     login,
     logout,
   };
@@ -34,6 +41,9 @@ const AuthContextProvider: React.FC<{
 }> = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [userRole, setUserRole] = useState<"MEMBER" | "ADMIN" | "ORGANIZER">(
+    "MEMBER"
+  );
   const login = () => {
     setIsLoggedIn(true);
     setIsLoading(false);
@@ -41,6 +51,7 @@ const AuthContextProvider: React.FC<{
   const logout = () => {
     setIsLoggedIn(false);
     setIsLoading(false);
+    setUserRole("MEMBER");
   };
 
   return (
@@ -48,6 +59,8 @@ const AuthContextProvider: React.FC<{
       value={{
         isLoggedIn,
         isLoading,
+        userRole,
+        setUserRole,
         login,
         logout,
       }}

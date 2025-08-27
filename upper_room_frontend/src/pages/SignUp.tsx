@@ -1,15 +1,12 @@
-import React, { type FormEvent } from "react";
-import { useState } from "react";
-import { Link as L } from "react-router";
+import { useState, type FormEvent } from "react";
+import { Link as L, useNavigate } from "react-router";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 import bible from "../assets/hero-page/feature-bible.jpg";
 import googleLogo from "../assets/google-logo.png";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 import { createUser } from "../firebase/firebase-auth";
 import { useLogger } from "../hooks";
-
-import { useNavigate } from "react-router";
 
 const SignUp = () => {
   // state
@@ -19,12 +16,11 @@ const SignUp = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const [role, setRole] = useState<"MEMBER" | "ORGANIZER" | "ADMIN">("MEMBER");
 
-  const navigate = useNavigate();
   // hooks
-  const logger = useLogger("src/pages/SignUp.tsx");
-
-  logger.debug("code =");
+  const logger = useLogger("src/pages/signup.tsx");
+  const navigate = useNavigate();
 
   // handlers
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -41,8 +37,14 @@ const SignUp = () => {
     if (password !== confirmPassword)
       return alert("CHECK PASSWORD AND CONFIRM PASSWORD...");
 
-    const user = await createUser(email, password);
+    // Set user role globally
+    sessionStorage.setItem("signupRole", role);
+    logger.debug("SETTING USER ROLE - ", role);
 
+    // Create firebase user
+    const user = await createUser(email, password);
+    logger.debug("CREATING NEW USER IN FIREBASE...");
+    if (!user) return alert("Something went wrong while creating user.");
     return navigate("/");
   };
 
@@ -66,13 +68,45 @@ const SignUp = () => {
               </h3>
 
               <form onSubmit={handleSubmit}>
+                <div>
+                  <label className="block text-gray-700">Choose Role</label>
+                  <div className="flex items-center space-x-6">
+                    <label className="flex items-center space-x-2">
+                      <input
+                        type="radio"
+                        name="role"
+                        value="ORGANIZER"
+                        checked={role === "ORGANIZER"}
+                        onChange={(e) => setRole(e.target.value)}
+                        className=""
+                      />
+                      <span className="text-gray-700">Organizer</span>
+                    </label>
+
+                    <label className="flex items-center space-x-2">
+                      <input
+                        type="radio"
+                        name="role"
+                        value="MEMBER"
+                        checked={role === "MEMBER"}
+                        onChange={(e) => setRole(e.target.value)}
+                        className="form-radio text-blue-600"
+                      />
+                      <span className="text-gray-700">Member</span>
+                    </label>
+                  </div>
+                </div>
+                {role === "organizer" && (
+                  <span className="text-sm text-red-700">
+                    Organizer accounts require approval before they become
+                    active.
+                  </span>
+                )}
                 <div className="my-4">
-                  <label className="block text-gray-700">
-                    Username or email address
-                  </label>
+                  <label className="block text-gray-700">Email address</label>
                   <input
                     className="w-full px-4 py-2 border border-gray-300 rounded outline-none placeholder:text-sm placeholder:text-gray-600"
-                    placeholder="Enter your username or email address"
+                    placeholder="Enter your email address"
                     type="text"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -154,9 +188,3 @@ const SignUp = () => {
 };
 
 export default SignUp;
-
-// 1. setup context for logged in state
-// 2. setup redux to persist login
-// 3. setup id token saving in localStorage
-// 4. setup backend middleware to validate idToken
-// 5. setup cors

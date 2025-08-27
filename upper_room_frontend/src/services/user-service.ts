@@ -1,4 +1,7 @@
 import { usersApi } from "./api";
+import Logger from "../utils/logger";
+
+const logger = new Logger("/src/services/user-service.ts");
 
 export const getUser = async (userId: string) => {
   // http://localhost:8888/api/v1/users
@@ -17,12 +20,17 @@ export const userExists = async (email: string) => {
 };
 
 export const createUser = async (userPayload: {}) => {
-  const req = await usersApi.post("/", {
-    user: {
-      ...userPayload,
-    },
-  });
+  try {
+    const res = await usersApi.post("/", {
+      user: {
+        ...userPayload,
+      },
+    });
 
-  const data = req.data;
-  return data;
+    const data = res.data;
+    logger.debug("FETCHED DATA - ", data);
+    return data;
+  } catch (error) {
+    logger.debug("ERROR - ", error);
+  }
 };

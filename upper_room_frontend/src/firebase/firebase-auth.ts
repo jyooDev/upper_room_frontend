@@ -19,7 +19,7 @@ export const authListener = (callback: (user: User | null) => void) => {
 export const createUser = async (email: string, password: string) => {
   try {
     const user = await createUserWithEmailAndPassword(auth, email, password);
-    return user;
+    return user.user;
   } catch (error) {
     logger.debug("createUser error = ", error);
     return null;
