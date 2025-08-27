@@ -2,12 +2,12 @@ import { useNavigate } from "react-router";
 import { Link } from "react-scroll";
 import { Link as L } from "react-router";
 
-import { useLogout, useLogger } from "../hooks";
+import { useLogger } from "../hooks";
 import { useAuthContext } from "../contexts/auth-context";
+import { ProfileDropdown } from ".";
 
 export const HomeNavBar = () => {
   const logger = useLogger("src/components/Navbar.tsx");
-  const logout = useLogout();
   const { isLoggedIn, isLoading } = useAuthContext();
   const navigate = useNavigate();
 
@@ -45,12 +45,7 @@ export const HomeNavBar = () => {
               <div></div>
             ) : isLoggedIn ? (
               <div className="flex items-center space-x-4">
-                <button
-                  onClick={logout}
-                  className="px-4 py-2 text-sm font-medium rounded-md border-primary bg-white border-2 hover:bg-gray-200"
-                >
-                  Logout
-                </button>
+                <ProfileDropdown />
               </div>
             ) : (
               <>
