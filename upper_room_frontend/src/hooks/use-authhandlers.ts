@@ -4,7 +4,10 @@ import type { User } from "firebase/auth";
 import { setUser, clearUser } from "../store/userSlice";
 import { useAuthContext } from "../contexts/auth-context";
 
-import { getUser, userExists, createUser } from "../services/user-service";
+import { userExists, createUser } from "../services/user-service";
+import { useLogger } from ".";
+
+const logger = useLogger("/src/hooks/use-authhandlers.ts");
 
 const useAuthHandlers = () => {
   const dispatch = useAppDispatch();
@@ -12,19 +15,20 @@ const useAuthHandlers = () => {
 
   const loggedInCallback = async (_user: User) => {
     try {
-      console.log("logged in user =", _user);
+      logger.debug("logged in user =", _user);
       const exists = await userExists(_user.email as string);
-      console.log("exists =", exists);
+      logger.debug("exists =", exists);
       if (exists) {
-        console.log("UPDATE USERS LAST SEEN AT");
+        logger.debug("UPDATE USERS LAST SEEN AT");
         // update user for last signin or lastseenat
       } else {
-        // need to create user
+        logger.debug("CREATING NEW USER");
         const newUser = await createUser({
+          _id: _user.uid,
           email: _user.email,
           role: "MEMBER",
         });
-        console.log("newUser =", newUser);
+        logger.debug("newUser =", newUser);
       }
 
       const idToken = await _user.getIdToken();

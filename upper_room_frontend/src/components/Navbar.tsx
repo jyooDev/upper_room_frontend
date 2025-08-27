@@ -1,15 +1,14 @@
-import React from "react";
 import { useNavigate } from "react-router";
 import { Link } from "react-scroll";
 import { Link as L } from "react-router";
 
 import { useAppSelector, useLogout, useLogger } from "../hooks";
+import { useAuthContext } from "../contexts/auth-context";
 
 export const HomeNavBar = () => {
   const logger = useLogger("src/components/Navbar.tsx");
   const logout = useLogout();
-  const user = useAppSelector((state) => state.curUser);
-  logger.debug("Current User: ", user);
+  const { isLoggedIn } = useAuthContext();
   const navigate = useNavigate();
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-neutral-200">
@@ -41,7 +40,7 @@ export const HomeNavBar = () => {
             </li>
           </ul>
           <div className="flex items-center justify-center gap-5">
-            {user.uid ? (
+            {isLoggedIn ? (
               <div className="flex items-center space-x-4">
                 <button
                   onClick={logout}

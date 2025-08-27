@@ -35,16 +35,13 @@ const SignUp = () => {
       confirmPassword,
     });
 
-    // step 1. make sure values are filled
     if (email === "" || password === "" || confirmPassword === "")
       return alert("PLEASE CHECK VALUES...");
 
-    // step 2. make sure password and confirm password match
     if (password !== confirmPassword)
       return alert("CHECK PASSWORD AND CONFIRM PASSWORD...");
 
-    // step 3. call createUser with email and password
-    await createUser(email, password);
+    const user = await createUser(email, password);
 
     return navigate("/");
   };

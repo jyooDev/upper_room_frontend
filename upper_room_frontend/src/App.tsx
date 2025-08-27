@@ -1,15 +1,17 @@
-import AppRouter from "./routes/index";
+import { Provider } from "react-redux";
 
-// import { useAuthListener, useAuthHandlers } from "./hooks";
 import { AuthContextProvider } from "./contexts";
+import AppRouter from "./routes/index";
+import { store } from "./store/store";
 
 function App() {
   return (
     <div>
       {/* browerser router here */}
       <AuthContextProvider>
-        {/* redux provider to be insude of context */}
-        <AppRouter />
+        <Provider store={store}>
+          <AppRouter />
+        </Provider>
       </AuthContextProvider>
     </div>
   );

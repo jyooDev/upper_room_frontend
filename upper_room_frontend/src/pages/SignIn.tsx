@@ -1,15 +1,18 @@
 import React, { type FormEvent } from "react";
 import { useState } from "react";
+
+// Third-party
 import { Link as L } from "react-router";
 import { useNavigate } from "react-router";
-
-import bible from "../assets/hero-page/feature-bible.jpg";
-import googleLogo from "../assets/google-logo.png";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
-import logger from "../utils/logger";
+// Assets
+import bible from "../assets/hero-page/feature-bible.jpg";
+import googleLogo from "../assets/google-logo.png";
 
-import { login } from "../firebase/firebase-auth";
+// Project imports
+import logger from "../utils/logger";
+import { login as Login } from "../firebase/firebase-auth";
 
 /**
  * 1. set states for email and password
@@ -32,8 +35,11 @@ const SignIn = () => {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (email === "" || password === "") return alert("Check Input Values...");
-    await login(email, password);
-    return navigate("/");
+    const userCredentials = await Login(email, password);
+    if (userCredentials?.user) {
+      return navigate("/");
+    }
+    alert("Login failed"); // REFACTOR REQUIRED: REACT HOOK FORM
   };
 
   return (

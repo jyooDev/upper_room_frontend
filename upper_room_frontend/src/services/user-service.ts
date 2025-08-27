@@ -8,7 +8,9 @@ export const getUser = async (userId: string) => {
 
 export const userExists = async (email: string) => {
   const req = await usersApi.get("/exists", {
-    data: { email },
+    params: {
+      email: email,
+    },
   });
   const data = req.data;
   return data;

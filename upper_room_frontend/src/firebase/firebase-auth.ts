@@ -29,6 +29,7 @@ export const createUser = async (email: string, password: string) => {
 export const login = async (email: string, password: string) => {
   try {
     const user = await signInWithEmailAndPassword(auth, email, password);
+    logger.debug("user login: ", user);
     return user;
   } catch (error) {
     logger.debug("login error = ", error);
