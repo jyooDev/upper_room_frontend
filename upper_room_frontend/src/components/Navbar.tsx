@@ -2,14 +2,18 @@ import { useNavigate } from "react-router";
 import { Link } from "react-scroll";
 import { Link as L } from "react-router";
 
-import { useAppSelector, useLogout, useLogger } from "../hooks";
+import { useLogout, useLogger } from "../hooks";
 import { useAuthContext } from "../contexts/auth-context";
 
 export const HomeNavBar = () => {
   const logger = useLogger("src/components/Navbar.tsx");
   const logout = useLogout();
-  const { isLoggedIn } = useAuthContext();
+  const { isLoggedIn, isLoading } = useAuthContext();
   const navigate = useNavigate();
+
+  logger.debug("isLoading - ", isLoading);
+  if (isLoading) return null;
+
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-neutral-200">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

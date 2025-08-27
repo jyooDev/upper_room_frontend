@@ -3,6 +3,7 @@ import { createContext, useState, useContext } from "react";
 // set interface for waht context will hold
 interface IAuthContext {
   isLoggedIn: boolean;
+  isLoading: boolean;
   login: () => void;
   logout: () => void;
 }
@@ -10,6 +11,7 @@ interface IAuthContext {
 // create context to use with inital values
 export const AuthContext = createContext<IAuthContext>({
   isLoggedIn: false,
+  isLoading: true,
   login: () => {},
   logout: () => {},
 });
@@ -17,9 +19,10 @@ export const AuthContext = createContext<IAuthContext>({
 // made use context to use throughout app
 export const useAuthContext = () => {
   const context = useContext(AuthContext);
-  const { isLoggedIn, login, logout } = context;
+  const { isLoggedIn, login, logout, isLoading } = context;
   return {
     isLoggedIn,
+    isLoading,
     login,
     logout,
   };
@@ -30,14 +33,21 @@ const AuthContextProvider: React.FC<{
   children: React.ReactNode | React.ReactNode[];
 }> = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-
-  const login = () => setIsLoggedIn(true);
-  const logout = () => setIsLoggedIn(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const login = () => {
+    setIsLoggedIn(true);
+    setIsLoading(false);
+  };
+  const logout = () => {
+    setIsLoggedIn(false);
+    setIsLoading(false);
+  };
 
   return (
     <AuthContext.Provider
       value={{
         isLoggedIn,
+        isLoading,
         login,
         logout,
       }}
