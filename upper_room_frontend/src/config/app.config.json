@@ -1,0 +1,10 @@
+{
+  "SERVER": {
+    "DEV": "http://localhost:8888/api",
+    "STAGING": "",
+    "PROD": ""
+  },
+  "APP_MODE": "DEV",
+  "LANGUAGES": ["ko", "en"],
+  "CURRENT_LANG": "en"
+}
