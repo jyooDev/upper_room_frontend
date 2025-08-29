@@ -10,12 +10,12 @@ export const getUser = async (userId: string) => {
 };
 
 export const userExists = async (email: string) => {
-  const req = await usersApi.get("/exists", {
+  const res = await usersApi.get("/exists", {
     params: {
       email: email,
     },
   });
-  const data = req.data;
+  const data = res.data;
   return data;
 };
 
@@ -32,5 +32,22 @@ export const createUser = async (userPayload: {}) => {
     return data;
   } catch (error) {
     logger.debug("ERROR - ", error);
+  }
+};
+
+export const updateUserProfile = async (uid: string, userPayload: {}) => {
+  try {
+    logger.bigLog(userPayload);
+
+    const res = await usersApi.put(`/set-profile/${uid}`, {
+      userProfile: {
+        ...userPayload,
+      },
+    });
+    const data = res.data;
+    logger.bigLog(data);
+    return data;
+  } catch (error) {
+    logger.error(error);
   }
 };
