@@ -9,6 +9,10 @@ class Logger {
     return console.log("DEBUG:", this.filePath, ...val);
   }
 
+  error(...val: any) {
+    return console.error("ERROR", this.filePath, ...val);
+  }
+
   bigLog(...val: any) {
     return console.log(`
       **************************  
