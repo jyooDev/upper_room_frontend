@@ -12,10 +12,10 @@ const Features = () => {
   return (
     <Element name="features">
       <section id="features">
-        <div className="flex flex-col items-center text-center justify-start gap-3 relative h-[100vh] max-h-full pt-30">
+        <div className="flex flex-col items-center text-center justify-start gap-3 relative h-[100vh] max-h-full pt-20 xl:pt-40">
           <div>
-            <h1 className="font-bold text-3xl">Features</h1>
-            <p className="text-gray-600">
+            <h1 className="mb-5 font-bold text-3xl">Features</h1>
+            <p className="mb-10 text-gray-600">
               UpperRoom envisions the church as a true community of faith,
               nurturing authentic fellowship within and carrying the Gospel
               beyond every barrier.
