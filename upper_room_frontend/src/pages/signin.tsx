@@ -1,9 +1,9 @@
-import React, { type FormEvent } from "react";
 import { useState } from "react";
 
 // Third-party
 import { Link as L } from "react-router";
 import { useNavigate } from "react-router";
+import { useForm } from "react-hook-form";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 // Assets
@@ -11,35 +11,48 @@ import bible from "../assets/hero-page/feature-bible.jpg";
 import googleLogo from "../assets/google-logo.png";
 
 // Project imports
-import logger from "../utils/logger";
+import { useLogger } from "@/hooks";
 import { login as Login } from "../firebase/firebase-auth";
 
-/**
- * 1. set states for email and password
- * 2. set value and onChange in email input and password input
- * 3. in submit method check that values are not empty strings
- * 4. call login with email and password
- */
+// Types
+type SigninFormValues = {
+  email: string;
+  password: string;
+};
 
+// Components
 const SignIn = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
 
+  // form settings
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<SigninFormValues>({
+    mode: "onTouched",
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  // hooks
   const navigate = useNavigate();
+  const logger = useLogger("/src/pages/signin.tsx");
 
+  // handlers
   const handleTogglePassword = () => {
     setShowPassword((prev) => !prev);
   };
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (email === "" || password === "") return alert("Check Input Values...");
-    const userCredentials = await Login(email, password);
-    if (userCredentials?.user) {
+  const onSubmitHandler = async (data: SigninFormValues) => {
+    logger.debug("Form data:", data);
+    const userCredentials = await Login(data.email, data.password);
+    if (userCredentials) {
       return navigate("/");
     }
-    alert("Login failed"); // REFACTOR REQUIRED: REACT HOOK FORM
+    console.log(userCredentials);
   };
 
   return (
@@ -61,28 +74,47 @@ const SignIn = () => {
                 Sign in to your account
               </h3>
 
-              <form onSubmit={handleSubmit}>
+              <form onSubmit={handleSubmit(onSubmitHandler)}>
                 <div className="my-4">
                   <label className="block text-gray-700">
                     Username or email address
                   </label>
                   <input
+                    {...register("email", {
+                      required: "Email is required",
+                      pattern: {
+                        value: /^\S+@\S+$/i,
+                        message: "Enter a valid email address.",
+                      },
+                    })}
                     className="w-full px-4 py-2 border border-gray-300 rounded outline-none placeholder:text-sm placeholder:text-gray-600"
                     placeholder="Enter your email address"
                     type="text"
-                    onChange={(e) => setEmail(e.target.value)}
                   />
+                  {errors["email"] && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors["email"].message}
+                    </p>
+                  )}
                 </div>
                 <div className="my-4">
                   <label className="block text-gray-700">Password</label>
                   <div className="relative">
                     <input
+                      {...register("password", {
+                        required: "Password is required",
+                      })}
                       className="w-full px-4 py-2 border border-gray-300 rounded outline-none placeholder:text-sm placeholder:text-gray-600"
                       placeholder="Enter your password"
                       type={showPassword ? "text" : "password"}
-                      onChange={(e) => setPassword(e.target.value)}
                     />
+                    {errors["password"] && (
+                      <p className="text-red-500 text-xs mt-1">
+                        {errors["password"].message}
+                      </p>
+                    )}
                     <button
+                      type="button"
                       onClick={handleTogglePassword}
                       className="absolute top-3 bottom-3 right-5 text-gray-600 hover:text-gray-700 cursor-pointer"
                     >
@@ -102,7 +134,10 @@ const SignIn = () => {
                   </a>
                 </div>
                 <div className="my-4">
-                  <button className="flex items-center justify-center w-full py-3 bg-primary border border-gray-300 rounded text-white cursor-pointer">
+                  <button
+                    type="submit"
+                    className="flex items-center justify-center w-full py-3 bg-primary border border-gray-300 rounded text-white cursor-pointer"
+                  >
                     Sign in
                   </button>
                 </div>

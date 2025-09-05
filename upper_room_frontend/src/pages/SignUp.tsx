@@ -1,5 +1,7 @@
-import { useState, type FormEvent } from "react";
+import { useEffect, useState } from "react";
+
 import { Link as L, useNavigate } from "react-router";
+import { useForm } from "react-hook-form";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 import bible from "../assets/hero-page/feature-bible.jpg";
@@ -13,29 +15,40 @@ const SignUp = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showConfirmPassword, setShowConfirmPassword] =
     useState<boolean>(false);
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [confirmPassword, setConfirmPassword] = useState<string>("");
-  const [role, setRole] = useState<"MEMBER" | "ORGANIZER" | "ADMIN">("MEMBER");
+
+  // types
+  type signUpFormValues = {
+    role: string;
+    email: string;
+    password: string;
+    passwordConfirm: string;
+  };
+
+  // form
+  const {
+    register,
+    watch,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<signUpFormValues>({
+    defaultValues: {
+      role: "MEMBER",
+      email: "",
+      password: "",
+      passwordConfirm: "",
+    },
+  });
 
   // hooks
   const logger = useLogger("src/pages/signup.tsx");
   const navigate = useNavigate();
+  const roleSelected = watch("role");
+  const password = watch("password");
 
   // handlers
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    logger.debug("values =", {
-      email,
-      password,
-      confirmPassword,
-    });
-
-    if (email === "" || password === "" || confirmPassword === "")
-      return alert("PLEASE CHECK VALUES...");
-
-    if (password !== confirmPassword)
-      return alert("CHECK PASSWORD AND CONFIRM PASSWORD...");
+  const onSubmitHandler = async (data: signUpFormValues) => {
+    logger.debug(data);
+    const { role, email, password } = data;
 
     // Set user role globally in session
     sessionStorage.setItem("signupRole", role);
@@ -69,17 +82,15 @@ const SignUp = () => {
                 Create your account
               </h3>
 
-              <form onSubmit={handleSubmit}>
+              <form onSubmit={handleSubmit(onSubmitHandler)}>
                 <div>
                   <label className="block text-gray-700">Choose Role</label>
                   <div className="flex items-center space-x-6">
                     <label className="flex items-center space-x-2">
                       <input
+                        {...register("role")}
                         type="radio"
-                        name="role"
                         value="ORGANIZER"
-                        checked={role === "ORGANIZER"}
-                        onChange={(e) => setRole(e.target.value)}
                         className=""
                       />
                       <span className="text-gray-700">Organizer</span>
@@ -87,18 +98,16 @@ const SignUp = () => {
 
                     <label className="flex items-center space-x-2">
                       <input
+                        {...register("role")}
                         type="radio"
-                        name="role"
                         value="MEMBER"
-                        checked={role === "MEMBER"}
-                        onChange={(e) => setRole(e.target.value)}
                         className="form-radio text-blue-600"
                       />
                       <span className="text-gray-700">Member</span>
                     </label>
                   </div>
                 </div>
-                {role === "ORGANIZER" && (
+                {roleSelected === "ORGANIZER" && (
                   <span className="text-sm text-red-700">
                     Organizer accounts require approval before they become
                     active.
@@ -107,22 +116,37 @@ const SignUp = () => {
                 <div className="my-4">
                   <label className="block text-gray-700">Email address</label>
                   <input
+                    {...register("email", {
+                      required: "Email is required",
+                      pattern: {
+                        value: /^\S+@\S+$/i,
+                        message: "Enter a valid email address.",
+                      },
+                    })}
                     className="w-full px-4 py-2 border border-gray-300 rounded outline-none placeholder:text-sm placeholder:text-gray-600"
                     placeholder="Enter your email address"
                     type="text"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
                   />
+                  {errors["email"] && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors["email"].message}
+                    </p>
+                  )}
                 </div>
                 <div className="my-4">
                   <label className="block text-gray-700">Password</label>
                   <div className="relative">
                     <input
+                      {...register("password", {
+                        required: "Password is required.",
+                        minLength: {
+                          value: 6,
+                          message: "Password has to be at least 6 characters",
+                        },
+                      })}
                       className="w-full px-4 py-2 border border-gray-300 rounded outline-none placeholder:text-sm placeholder:text-gray-600"
                       placeholder="Enter your password"
                       type={showPassword ? "text" : "password"}
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
                     />
                     <button
                       onClick={() => setShowPassword(!showPassword)}
@@ -131,6 +155,11 @@ const SignUp = () => {
                       {showPassword ? <FaEyeSlash /> : <FaEye />}
                     </button>
                   </div>
+                  {errors["password"] && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors["password"].message}
+                    </p>
+                  )}
                 </div>
                 <div className="my-4">
                   <label className="block text-gray-700">
@@ -138,11 +167,16 @@ const SignUp = () => {
                   </label>
                   <div className="relative">
                     <input
+                      {...register("passwordConfirm", {
+                        required: "Confirm password is required.",
+                        validate: {
+                          passwordMatch: (p) =>
+                            p === password || "Passwords do not match",
+                        },
+                      })}
                       className="w-full px-4 py-2 border border-gray-300 rounded outline-none placeholder:text-sm placeholder:text-gray-600"
                       placeholder="Enter your password"
                       type={showConfirmPassword ? "text" : "password"}
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
                     />
                     <button
                       onClick={() =>
@@ -153,6 +187,11 @@ const SignUp = () => {
                       {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
                     </button>
                   </div>
+                  {errors["passwordConfirm"] && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors["passwordConfirm"].message}
+                    </p>
+                  )}
                 </div>
                 <div className="my-4">
                   <button className="flex items-center justify-center w-full py-3 bg-primary border border-gray-300 rounded text-white cursor-pointer">
