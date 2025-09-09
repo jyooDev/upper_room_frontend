@@ -2,7 +2,7 @@ import { Navbar, Hero, Feature, Contact, Community } from "../components";
 const Home = () => {
   return (
     <>
-      <Navbar />
+      <Navbar isHome={true} />
       <Hero />
       <Feature />
       <Community />
