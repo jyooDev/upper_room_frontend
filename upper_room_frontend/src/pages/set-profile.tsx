@@ -19,15 +19,14 @@ import {
 import { Button } from "@/components/ui/button";
 
 // Hooks
-import { useAppDispatch, useLogger } from "@/hooks";
+import { useLogger } from "@/hooks";
 
-// Redux / store
-import { setUser } from "@/store/user-slice";
+// Context
+import { useAuthContext } from "../contexts/auth-context";
 
 // Services
 import { updateUserProfile } from "@/services/user-service";
 import { useNavigate } from "react-router";
-
 // Types
 type ProfileFormValues = {
   firstName: string;
@@ -41,6 +40,7 @@ type ProfileFormValues = {
 const SetProfile = () => {
   // states & constants
   const [step, setStep] = useState<number>(1);
+  const { setUser } = useAuthContext();
 
   // constants
   const totalSteps = 3;
@@ -116,7 +116,6 @@ const SetProfile = () => {
   // hooks
   const logger = useLogger("/src/pages/set-profile.tsx");
   const auth = getAuth();
-  const dispatch = useAppDispatch();
   const user = auth.currentUser;
   const navigate = useNavigate();
 
@@ -145,14 +144,12 @@ const SetProfile = () => {
       };
       await updateUserProfile(user.uid, payload);
 
-      // redux store
-      dispatch(
-        setUser({
-          uid: user.uid,
-          displayName: user.displayName,
-          email: user.email,
-        })
-      );
+      // store
+      setUser({
+        uid: user.uid,
+        displayName: user.displayName,
+        email: user.email,
+      });
 
       navigate("/");
     }
