@@ -10,11 +10,19 @@ export const getUser = async (userId: string) => {
 };
 
 export const userExists = async (email: string) => {
+  // http://localhost:8888/api/v1/users/exists
   const res = await usersApi.get("/exists", {
     params: {
       email: email,
     },
   });
+  const data = res.data;
+  return data;
+};
+
+export const updateLastLogin = async (userId: string) => {
+  // http://localhost:8888/api/v1/users/lastLogin
+  const res = await usersApi.put(`/lastLogin/${userId}`);
   const data = res.data;
   return data;
 };
