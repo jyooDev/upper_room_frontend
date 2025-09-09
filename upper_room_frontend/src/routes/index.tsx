@@ -1,7 +1,7 @@
-import { Route, Routes } from "react-router";
-import { Home } from "../pages";
+import { Routes } from "react-router";
 
 import AuthRoutes from "./auth-routes";
+import AppRoutes from "./app-routes";
 import { useAuthHandlers, useAuthListener } from "../hooks";
 
 const AppRouter = () => {
@@ -10,9 +10,8 @@ const AppRouter = () => {
 
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
+      {AppRoutes}
       {AuthRoutes}
-      <Route path="*" element={<Home />} />
     </Routes>
   );
 };
