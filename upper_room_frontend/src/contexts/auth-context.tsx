@@ -1,5 +1,18 @@
 import { createContext, useState, useContext } from "react";
 
+export interface IUser {
+  uid?: string;
+  displayName?: string;
+  firstName?: string;
+  middleName?: string;
+  lastName?: string;
+  dob?: string | Date;
+  gender?: string;
+  username?: string;
+  email?: string;
+  photoURL?: string;
+}
+
 // set interface for waht context will hold
 interface IAuthContext {
   isLoggedIn: boolean;
@@ -8,6 +21,8 @@ interface IAuthContext {
   setUserRole: (role: "MEMBER" | "ORGANIZER" | "ADMIN") => void;
   login: () => void;
   logout: () => void;
+  user: IUser | null;
+  setUser: (user: IUser | null) => void;
 }
 
 // create context to use with inital values
@@ -18,13 +33,23 @@ export const AuthContext = createContext<IAuthContext>({
   setUserRole: () => {},
   login: () => {},
   logout: () => {},
+  user: null,
+  setUser: () => {},
 });
 
 // made use context to use throughout app
 export const useAuthContext = () => {
   const context = useContext(AuthContext);
-  const { isLoggedIn, userRole, isLoading, login, logout, setUserRole } =
-    context;
+  const {
+    isLoggedIn,
+    userRole,
+    isLoading,
+    login,
+    logout,
+    setUserRole,
+    user,
+    setUser,
+  } = context;
   return {
     isLoggedIn,
     isLoading,
@@ -32,6 +57,8 @@ export const useAuthContext = () => {
     setUserRole,
     login,
     logout,
+    user,
+    setUser,
   };
 };
 
@@ -44,6 +71,7 @@ const AuthContextProvider: React.FC<{
   const [userRole, setUserRole] = useState<"MEMBER" | "ADMIN" | "ORGANIZER">(
     "MEMBER"
   );
+  const [user, setUser] = useState<IUser | null>(null);
   const login = () => {
     setIsLoggedIn(true);
     setIsLoading(false);
@@ -63,6 +91,8 @@ const AuthContextProvider: React.FC<{
         setUserRole,
         login,
         logout,
+        user,
+        setUser,
       }}
     >
       {children}
