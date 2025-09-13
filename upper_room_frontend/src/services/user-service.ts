@@ -21,9 +21,10 @@ export const userExists = async (email: string) => {
 };
 
 export const updateLastLogin = async (userId: string) => {
-  // http://localhost:8888/api/v1/users/lastLogin
-  const res = await usersApi.put(`/lastLogin/${userId}`);
+  // http://localhost:8888/api/v1/users/last-login
+  const res = await usersApi.put(`/last-login/${userId}`);
   const data = res.data;
+  3;
   return data;
 };
 
