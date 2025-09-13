@@ -73,9 +73,11 @@ const ProfileDropdown = () => {
                   Profile
                 </div>
               </L>
-              <div className="hover:bg-gray-300 px-2 py-1 rounded cursor-pointer">
-                My Organizations
-              </div>
+              <L to="/my-organizations">
+                <div className="hover:bg-gray-300 px-2 py-1 rounded cursor-pointer">
+                  My Organizations
+                </div>
+              </L>
               <span className="border-b border-gray-300"></span>
               <div
                 onClick={logout}

@@ -34,6 +34,7 @@ const useAuthHandlers = () => {
           gender: user.gender,
           username: user.username,
           photoURL: _user.photoURL || "",
+          dob: user.dob || "",
         });
         setUserRole(user.role);
         const updatedLastLogin = await updateLastLogin(_user.uid);
@@ -58,9 +59,6 @@ const useAuthHandlers = () => {
           displayName: _user.displayName || "",
         });
       }
-
-      const idToken = await _user.getIdToken();
-      console.log("idToken =", idToken);
       login();
     } catch (error) {
       console.error("error =", error);

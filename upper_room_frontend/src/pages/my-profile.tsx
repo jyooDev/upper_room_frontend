@@ -33,12 +33,14 @@ const MyProfile = () => {
   const { user, isLoading, setUser } = useAuthContext();
   const logger = useLogger("/src/pages/my-profile.tsx");
 
+  logger.debug(user);
   // React Hook Form
   const {
     register,
     handleSubmit,
     watch,
     setValue,
+    getValues,
     formState: { errors },
   } = useForm<ProfileFormValues>({
     mode: "onTouched",
@@ -66,6 +68,7 @@ const MyProfile = () => {
         const formatted = date.toISOString().split("T")[0]; // YYYY-MM-DD
         setValue("dob", formatted);
       } else {
+        logger.debug("USER DID NOT HAVE DOB");
         setValue("dob", "");
       }
 
@@ -104,6 +107,8 @@ const MyProfile = () => {
 
     if (!user.uid) return;
     await updateUserProfile(user.uid, payload);
+
+    logger.debug("data =", data);
 
     // Update Auth Context
     setUser({
@@ -317,14 +322,19 @@ const MyProfile = () => {
                         </DropdownMenu>
                       </label>
                       {/* Date of Birth */}
+
                       <label htmlFor="dob" className="text-xs">
                         Date of Birth
-                        <input
-                          type="date"
-                          id="dob"
-                          {...register("dob")}
-                          className="w-full px-4 py-2 border border-gray-200 rounded outline-none"
-                        />
+                        {getValues("dob") === "" ? (
+                          <button>select dob</button>
+                        ) : (
+                          <input
+                            type="date"
+                            id="dob"
+                            {...register("dob")}
+                            className="w-full px-4 py-2 border border-gray-200 rounded outline-none"
+                          />
+                        )}
                       </label>
                     </form>
                   </div>
