@@ -5,13 +5,15 @@ interface OrganizationCardProps {
   orgName: string;
   logoImage: string;
   join?: boolean;
+  onJoinClick?: (orgName: string) => void;
 }
 
-const OrganizationCard = ({
+const OrganizationCard: React.FC<OrganizationCardProps> = ({
   orgName,
   logoImage,
   join = false,
-}: OrganizationCardProps) => {
+  onJoinClick,
+}) => {
   return (
     <Card
       className={`p-3 ${
@@ -35,6 +37,7 @@ const OrganizationCard = ({
             <Button
               type="button"
               className="bg-gray-700 hover:bg-gray-800 transition"
+              onClick={() => onJoinClick?.(orgName)}
             >
               Join
             </Button>

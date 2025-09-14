@@ -5,3 +5,4 @@ export { default as Feature } from "./feature";
 export { default as Navbar } from "./navbar";
 export { default as Hero } from "./hero";
 export { default as OrganizationCard } from "./organization-card";
+export { default as Loader } from "./loader";

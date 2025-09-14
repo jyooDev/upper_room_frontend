@@ -1,5 +1,6 @@
-import { Navbar } from "@/components";
+import { useState } from "react";
 
+import { Navbar } from "@/components";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -13,10 +14,42 @@ import {
 import { Input } from "@/components/ui/input";
 import { FaSearch } from "react-icons/fa";
 
-import { OrganizationCard } from "../components";
+import { OrganizationCard, Loader } from "../components";
+
 const MyOrganizations = () => {
+  const [isFindDialogOpen, setIsFindDialogOpen] = useState(false);
+  const [isLoadingDialogOpen, setIsLoadingDialogOpen] = useState(false);
+  const [isJoinResultDialogOpen, setIsJoinResultDialogOpen] = useState(false);
+  const [joinResultMessage, setJoinResultMessage] = useState<string>("");
+
+  const handleJoinOrganization = async (orgName: string) => {
+    try {
+      setIsFindDialogOpen(false);
+      setIsLoadingDialogOpen(true);
+
+      // ----FIX----
+      // Simulate API call (replace with real one)
+      await new Promise((resolve) => setTimeout(resolve, 2000)); // fake 2s delay
+
+      // On success
+      setJoinResultMessage(`Successfully sent join request to "${orgName}".`);
+    } catch (error) {
+      // On error
+      setJoinResultMessage(`Failed to send join request: ${error.message}`);
+    } finally {
+      // Close loader
+      setIsLoadingDialogOpen(false);
+      setIsJoinResultDialogOpen(true);
+    }
+  };
+
   return (
     <>
+      <Loader
+        isLoadingDialogOpen={isLoadingDialogOpen}
+        loaderMessage="Sending Join Request..."
+      />
+
       <Navbar isHome={false} />
       <section
         id="my-profile"
@@ -49,7 +82,8 @@ const MyOrganizations = () => {
           />
           {/* -----UI MOCK END----- */}
 
-          <Dialog>
+          {/* -------- Dialog 1: Find Org Dialog -------- */}
+          <Dialog open={isFindDialogOpen} onOpenChange={setIsFindDialogOpen}>
             <form>
               <DialogTrigger asChild>
                 <Button
@@ -63,12 +97,8 @@ const MyOrganizations = () => {
               <DialogContent className="sm:max-w-[700px] max-h-[90vh] overflow-y-auto p-4">
                 <DialogHeader className="w-full">
                   <DialogTitle>Find Your Organization</DialogTitle>
-                  <DialogDescription>
-                    Make changes to your profile here. Click save when
-                    you&apos;re done.
-                  </DialogDescription>
+                  <DialogDescription></DialogDescription>
                 </DialogHeader>
-
                 {/* Serach Bar */}
                 <div className="relative w-2/3 max-w-2/3">
                   <FaSearch className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -85,26 +115,7 @@ const MyOrganizations = () => {
                     orgName="Young Adult Ministry"
                     logoImage="https://southerncharmdesign.co/wp-content/uploads/2018/05/YoungAdultMinisty_Logo_2.jpg"
                     join={true}
-                  />
-                  <OrganizationCard
-                    orgName="Young Adult Ministry"
-                    logoImage="https://southerncharmdesign.co/wp-content/uploads/2018/05/YoungAdultMinisty_Logo_2.jpg"
-                    join={true}
-                  />
-                  <OrganizationCard
-                    orgName="Young Adult Ministry"
-                    logoImage="https://southerncharmdesign.co/wp-content/uploads/2018/05/YoungAdultMinisty_Logo_2.jpg"
-                    join={true}
-                  />
-                  <OrganizationCard
-                    orgName="Young Adult Ministry"
-                    logoImage="https://southerncharmdesign.co/wp-content/uploads/2018/05/YoungAdultMinisty_Logo_2.jpg"
-                    join={true}
-                  />
-                  <OrganizationCard
-                    orgName="Young Adult Ministry"
-                    logoImage="https://southerncharmdesign.co/wp-content/uploads/2018/05/YoungAdultMinisty_Logo_2.jpg"
-                    join={true}
+                    onJoinClick={handleJoinOrganization}
                   />
                 </div>
                 {/* -----UI MOCK END----- */}
@@ -121,6 +132,27 @@ const MyOrganizations = () => {
                 </DialogFooter>
               </DialogContent>
             </form>
+          </Dialog>
+
+          {/* -------- Dialog 2: Join Success Message -------- */}
+          <Dialog
+            open={isJoinResultDialogOpen}
+            onOpenChange={setIsJoinResultDialogOpen}
+          >
+            <DialogContent className="sm:max-w-md text-center">
+              <DialogHeader>
+                <DialogTitle>Request Sent ✅</DialogTitle>
+                <DialogDescription>{joinResultMessage}</DialogDescription>
+              </DialogHeader>
+              <DialogFooter>
+                <Button
+                  className="w-full mt-4"
+                  onClick={() => setIsJoinResultDialogOpen(false)}
+                >
+                  Close
+                </Button>
+              </DialogFooter>
+            </DialogContent>
           </Dialog>
         </div>
       </section>
