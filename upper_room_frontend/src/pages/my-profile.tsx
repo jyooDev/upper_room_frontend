@@ -16,6 +16,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from "@radix-ui/react-popover";
+import { Calendar } from "@/components/ui/calendar";
+import { CiCalendar } from "react-icons/ci";
 
 // Types
 type ProfileFormValues = {
@@ -40,7 +47,6 @@ const MyProfile = () => {
     handleSubmit,
     watch,
     setValue,
-    getValues,
     formState: { errors },
   } = useForm<ProfileFormValues>({
     mode: "onTouched",
@@ -56,7 +62,7 @@ const MyProfile = () => {
   });
 
   const gender = watch("gender");
-
+  const dob = watch("dob");
   // Populate form with user data when loaded
   useEffect(() => {
     if (user) {
@@ -100,7 +106,7 @@ const MyProfile = () => {
         middleName: data.middleName || undefined,
         lastName: data.lastName,
       },
-      dob: data.dob || undefined,
+      dob: data.dob || undefined || Date || String,
       gender: data.gender || undefined,
       username: data.username,
     };
@@ -321,20 +327,36 @@ const MyProfile = () => {
                           </DropdownMenuContent>
                         </DropdownMenu>
                       </label>
-                      {/* Date of Birth */}
 
-                      <label htmlFor="dob" className="text-xs">
-                        Date of Birth
-                        {getValues("dob") === "" ? (
-                          <button>select dob</button>
-                        ) : (
-                          <input
-                            type="date"
-                            id="dob"
-                            {...register("dob")}
-                            className="w-full px-4 py-2 border border-gray-200 rounded outline-none"
-                          />
-                        )}
+                      {/* Date of Birth */}
+                      <label htmlFor="dob" className="text-xs flex flex-col">
+                        <span>Date of Birth</span>
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <Button
+                              variant="outline"
+                              id="dob"
+                              className="w-48 justify-start font-normal"
+                            >
+                              <CiCalendar />
+                              {dob
+                                ? new Date(dob).toISOString().split("T")[0]
+                                : "Select date"}
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent
+                            className="w-auto overflow-hidden p-0"
+                            align="start"
+                          >
+                            <Calendar
+                              mode="single"
+                              captionLayout="dropdown"
+                              onSelect={(date) => {
+                                setValue("dob", date);
+                              }}
+                            />
+                          </PopoverContent>
+                        </Popover>
                       </label>
                     </form>
                   </div>
