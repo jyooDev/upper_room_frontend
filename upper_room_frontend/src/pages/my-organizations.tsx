@@ -35,7 +35,7 @@ const MyOrganizations = () => {
       setJoinResultMessage(`Successfully sent join request to "${orgName}".`);
     } catch (error) {
       // On error
-      setJoinResultMessage(`Failed to send join request: ${error.message}`);
+      setJoinResultMessage(`Failed to send join request: ERROR MESSAGE`);
     } finally {
       // Close loader
       setIsLoadingDialogOpen(false);
