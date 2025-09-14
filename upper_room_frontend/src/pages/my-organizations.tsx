@@ -1,15 +1,17 @@
 import { Navbar } from "@/components";
 
-import {
-  Card,
-  CardAction,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { FaSearch } from "react-icons/fa";
 
 import { OrganizationCard } from "../components";
 const MyOrganizations = () => {
@@ -47,15 +49,79 @@ const MyOrganizations = () => {
           />
           {/* -----UI MOCK END----- */}
 
-          <Card className="p-3 w-70 h-70 flex flex-col justify-center items-center border-dashed border-2 border-gray-300 hover:border-gray-400 transition cursor-pointer">
-            <button
-              type="button"
-              className="flex flex-col items-center justify-center text-gray-500"
-            >
-              <span className="text-4xl">+</span>
-              <span className="mt-2 text-sm">Find More to Join!</span>
-            </button>
-          </Card>
+          <Dialog>
+            <form>
+              <DialogTrigger asChild>
+                <Button
+                  type="button"
+                  className="w-70 h-70 flex flex-col border-dashed border-2 border-gray-300 bg-white hover:bg-white hover:border-gray-400 transition cursor-pointerflex-col items-center justify-center text-gray-500"
+                >
+                  <span className="text-4xl">+</span>
+                  <span className="mt-2 text-sm">Find More to Join!</span>
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[700px] max-h-[90vh] overflow-y-auto p-4">
+                <DialogHeader className="w-full">
+                  <DialogTitle>Find Your Organization</DialogTitle>
+                  <DialogDescription>
+                    Make changes to your profile here. Click save when
+                    you&apos;re done.
+                  </DialogDescription>
+                </DialogHeader>
+
+                {/* Serach Bar */}
+                <div className="relative w-2/3 max-w-2/3">
+                  <FaSearch className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                  <Input
+                    type="search"
+                    placeholder="Enter your organization"
+                    className="pl-10"
+                  ></Input>
+                </div>
+
+                {/* -----UI MOCK START----- */}
+                <div className="relative w-full grid grid-cols-2 sm:grid-cols-3 max-w-7xl gap-4 text-sm mx-auto">
+                  <OrganizationCard
+                    orgName="Young Adult Ministry"
+                    logoImage="https://southerncharmdesign.co/wp-content/uploads/2018/05/YoungAdultMinisty_Logo_2.jpg"
+                    join={true}
+                  />
+                  <OrganizationCard
+                    orgName="Young Adult Ministry"
+                    logoImage="https://southerncharmdesign.co/wp-content/uploads/2018/05/YoungAdultMinisty_Logo_2.jpg"
+                    join={true}
+                  />
+                  <OrganizationCard
+                    orgName="Young Adult Ministry"
+                    logoImage="https://southerncharmdesign.co/wp-content/uploads/2018/05/YoungAdultMinisty_Logo_2.jpg"
+                    join={true}
+                  />
+                  <OrganizationCard
+                    orgName="Young Adult Ministry"
+                    logoImage="https://southerncharmdesign.co/wp-content/uploads/2018/05/YoungAdultMinisty_Logo_2.jpg"
+                    join={true}
+                  />
+                  <OrganizationCard
+                    orgName="Young Adult Ministry"
+                    logoImage="https://southerncharmdesign.co/wp-content/uploads/2018/05/YoungAdultMinisty_Logo_2.jpg"
+                    join={true}
+                  />
+                </div>
+                {/* -----UI MOCK END----- */}
+                <div className="my-2"></div>
+                <DialogFooter className="relative flex w-full justify-center sm:justify-center items-center">
+                  <div className="flex items-center gap-1 text-xs ">
+                    <span className="text-gray-800">
+                      Can’t find your organization?
+                    </span>
+                    <a className="text-blue-500 cursor-pointer">
+                      Create your organization!
+                    </a>
+                  </div>
+                </DialogFooter>
+              </DialogContent>
+            </form>
+          </Dialog>
         </div>
       </section>
     </>
