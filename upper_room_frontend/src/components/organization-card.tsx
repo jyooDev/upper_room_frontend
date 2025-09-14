@@ -1,5 +1,6 @@
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router";
 
 interface OrganizationCardProps {
   orgName: string;
@@ -45,12 +46,16 @@ const OrganizationCard: React.FC<OrganizationCardProps> = ({
         ) : (
           <>
             <p className="text-xs text-gray-700">{orgName}</p>
-            <Button
-              type="button"
-              className="bg-gray-700 hover:bg-gray-800 transition"
+            <Link
+              to={`/my-organization/${encodeURIComponent(orgName)}/sermons`}
             >
-              Org Page
-            </Button>
+              <Button
+                type="button"
+                className="bg-gray-700 hover:bg-gray-800 transition"
+              >
+                Org Page
+              </Button>
+            </Link>
           </>
         )}
       </CardFooter>
