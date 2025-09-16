@@ -1,1 +1,1 @@
-export { type Sermon } from "./sermon.ts";
+export { type Sermon, type Transcript } from "./sermon.ts";

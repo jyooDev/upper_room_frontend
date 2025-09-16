@@ -1,7 +1,10 @@
 import { useState } from "react";
 import { DateRangePicker, SermonRow } from "@/components";
 import { type DateRange } from "react-day-picker";
-import { type Sermon } from "@/types";
+
+// mock
+import { mockSermons as sermons } from "@/mock/sermon-mock";
+
 const MyOrganizationSermons = () => {
   const today = new Date();
 
@@ -12,38 +15,45 @@ const MyOrganizationSermons = () => {
     from: oneYearAgo,
     to: today,
   });
+  const [activeSermonId, setActiveSermonId] = useState<string | null>(null);
 
   // TO DO:
   // Implement filtering by date range selected in ASC
   //
   return (
-    <div className="flex flex-col gap-3 w-full h-full">
-      <DateRangePicker date={date} setDate={setDate} />
+    <div className="flex flex-col gap-3 w-full h-full overflow-hidden">
+      {!activeSermonId ? (
+        <DateRangePicker date={date} setDate={setDate} />
+      ) : (
+        <button
+          onClick={() => setActiveSermonId(null)}
+          className="flex w-fit justify-start px-4 py-2 bg-gray-700 text-white rounded"
+        >
+          Back to list
+        </button>
+      )}
       <span className="flex w-full border-t border-gray-300"></span>
-      <div id="main-sermons-tab" className="">
-        <SermonRow sermon={mockSermon} />
+      <div
+        id="main-sermons-tab"
+        className="flex flex-col flex-1 overflow-y-auto gap-3"
+      >
+        {sermons.map((sermon) =>
+          activeSermonId === null || activeSermonId === sermon._id ? (
+            <SermonRow
+              key={sermon._id}
+              sermon={sermon}
+              isActive={activeSermonId === sermon._id}
+              onPlay={() =>
+                setActiveSermonId(
+                  activeSermonId === sermon._id ? null : sermon._id
+                )
+              }
+            />
+          ) : null
+        )}
       </div>
     </div>
   );
-};
-
-// ---- UI MOCK
-const mockSermon: Sermon = {
-  _id: "614c1b9f1c4ae85a1c8b4567",
-  pastorId: "5f4d4c3b2a1b9e0017f4a123",
-  organizationId: "5f4d4c3b2a1b9e0017f4a456",
-  title: "Walking by Faith, Not by Sight",
-  audioUrl: "https://example.com/audio/walking-by-faith.mp3",
-  transcripts: [
-    "Welcome to today’s sermon.",
-    "Today, we’re talking about walking by faith...",
-    "Let’s turn to 2 Corinthians 5:7...",
-    "Faith is not about what we see, but what we believe...",
-  ],
-  originalLanguage: "en",
-  visibility: "PUBLIC",
-  createdAt: "2025-08-20T10:30:00.000Z",
-  updatedAt: "2025-08-22T14:45:00.000Z",
 };
 
 export default MyOrganizationSermons;

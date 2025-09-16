@@ -11,3 +11,4 @@ export { default as OrganizationCard } from "./organization-card";
 export { default as ProfileDropdown } from "./profile";
 export { default as DateRangePicker } from "./date-range-picker";
 export { default as SermonRow } from "./sermonRow";
+export { default as AudioPlayer } from "./audioPlayer";
