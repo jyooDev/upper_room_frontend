@@ -28,7 +28,7 @@ const MyOrganizationLayout = ({ children }: { children: React.ReactNode }) => {
 
         {/* Main Content */}
         <div className="flex flex-1  flex-row w-full h-full relative">
-          <MyOrgSideBar />
+          <MyOrgSideBar orgName={name} />
           <main className="flex-1 overflow-y-auto p-4">{children}</main>
         </div>
       </section>

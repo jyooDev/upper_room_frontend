@@ -5,6 +5,7 @@ import {
   MyProfile,
   MyOrganizationLayout,
   MyOrganizationSermons,
+  MyOrganizationPosts,
 } from "../pages";
 
 const AppRoutes = (
@@ -18,6 +19,15 @@ const AppRoutes = (
       element={
         <MyOrganizationLayout>
           <MyOrganizationSermons />
+        </MyOrganizationLayout>
+      }
+    ></Route>
+
+    <Route
+      path="/my-organization/:orgName/posts"
+      element={
+        <MyOrganizationLayout>
+          <MyOrganizationPosts />
         </MyOrganizationLayout>
       }
     ></Route>
