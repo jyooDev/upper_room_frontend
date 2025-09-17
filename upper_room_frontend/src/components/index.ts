@@ -12,3 +12,5 @@ export { default as ProfileDropdown } from "./profile";
 export { default as DateRangePicker } from "./date-range-picker";
 export { default as SermonRow } from "./sermonRow";
 export { default as AudioPlayer } from "./audioPlayer";
+export { default as PostCard } from "./post";
+export { default as Feed } from "./feed";

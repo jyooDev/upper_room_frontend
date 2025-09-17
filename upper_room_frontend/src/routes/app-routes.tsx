@@ -31,6 +31,11 @@ const AppRoutes = (
         </MyOrganizationLayout>
       }
     ></Route>
+
+    <Route
+      path="/my-organization/:orgName/posts/:postId"
+      element={<MyOrganizationLayout>HELLO</MyOrganizationLayout>}
+    ></Route>
   </>
 );
 

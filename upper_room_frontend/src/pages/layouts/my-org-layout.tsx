@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom";
 import { Navbar, MyOrgSideBar } from "@/components";
 import { useLogger } from "@/hooks";
+import { OrgProvider } from "@/contexts";
 
 const MyOrganizationLayout = ({ children }: { children: React.ReactNode }) => {
   const logger = useLogger("/src/pages/org-home.tsx");
@@ -27,10 +28,12 @@ const MyOrganizationLayout = ({ children }: { children: React.ReactNode }) => {
         </div>
 
         {/* Main Content */}
-        <div className="flex flex-1  flex-row w-full h-full relative">
-          <MyOrgSideBar orgName={name} />
-          <main className="flex-1 overflow-y-auto p-4">{children}</main>
-        </div>
+        <OrgProvider defaultOrgName={orgName}>
+          <div className="flex flex-1  flex-row w-full h-full relative">
+            <MyOrgSideBar orgName={name} />
+            <main className="flex-1 overflow-y-auto p-4">{children}</main>
+          </div>
+        </OrgProvider>
       </section>
     </>
   );
