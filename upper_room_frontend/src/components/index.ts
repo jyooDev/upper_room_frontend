@@ -14,3 +14,4 @@ export { default as SermonRow } from "./sermonRow";
 export { default as AudioPlayer } from "./audioPlayer";
 export { default as PostCard } from "./post";
 export { default as Feed } from "./feed";
+export { default as PostComposer } from "./post-compose";

@@ -78,7 +78,7 @@ const MyOrganizationPosts = () => {
         </div>
         <span className="flex w-full border-t border-gray-300"></span>
       </div>
-      <div className="mt-5">
+      <div className="mt-5 flex flex-col">
         <Feed
           posts={
             postType === "ALL"

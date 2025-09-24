@@ -38,7 +38,7 @@ const PostCard = ({ post }: PostCardProps) => {
   const { orgName } = useOrgContext();
   return (
     <a href={`/my-organization/${encodeURI(orgName)}/posts/${post._id}`}>
-      <Card className="p-4 border-b rounded-none">
+      <Card className="p-4 border-none rounded-none">
         {/* Author & Timestamp */}
         <div className="flex items-center gap-3">
           <Avatar className="w-8 h-8">
