@@ -1,40 +1,85 @@
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Navbar, MyOrgSideBar } from "@/components";
 import { useLogger } from "@/hooks";
 import { OrgProvider } from "@/contexts";
+import { getOrgByName, type Org } from "@/services/org-service";
 
 const MyOrganizationLayout = ({ children }: { children: React.ReactNode }) => {
-  const logger = useLogger("/src/pages/org-home.tsx");
+  const logger = useLogger("/src/pages/layouts/my-org-layout.tsx");
 
-  const { orgName } = useParams<{ orgName: string }>();
-  const name = orgName ? decodeURIComponent(orgName) : "Organization Page";
-  logger.debug(name);
+  const { orgName: orgNameParam, orgId: orgIdParam } = useParams<{
+    orgName: string;
+    orgId?: string;
+  }>();
+  const decodedName = orgNameParam ? decodeURIComponent(orgNameParam) : "";
+
+  const [loading, setLoading] = useState(true);
+  const [orgData, setOrgData] = useState<{ orgId: string; orgName: string }>({
+    orgId: orgIdParam || "",
+    orgName: decodedName,
+  });
+
+  useEffect(() => {
+    const initializeOrg = async () => {
+      logger.debug("Initializing Org....");
+      if (orgIdParam) {
+        setOrgData({ orgId: orgIdParam, orgName: decodedName });
+      } else if (decodedName) {
+        const org: Org | null = await getOrgByName(decodedName);
+        if (org) {
+          setOrgData({
+            orgId: org._id,
+            orgName: org.name,
+          });
+        } else {
+          logger.error("Organization not found");
+        }
+      }
+      setLoading(false);
+    };
+    initializeOrg();
+  }, [orgIdParam, decodedName]);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        Loading...
+      </div>
+    );
+  }
+
+  logger.debug(`Org: ${orgData.orgName} (${orgData.orgId})`);
+
   return (
     <>
       <Navbar isHome={false} />
-      <section
-        id="org-home"
-        className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative flex flex-col min-h-screen overflow-hidden"
+      {/* Main Content */}
+      <OrgProvider
+        defaultOrgName={orgData.orgName}
+        defaultOrgId={orgData.orgId}
       >
-        {/* Header */}
-        <div className="hidden md:block relative w-full mt-18 h-30 bg-gradient-to-br from-primary-100/70 to-primary-100/90">
-          <span className="flex flex-col relative w-full h-full justify-center px-5 font-semibold text-2xl text-white">
-            <span>{name}</span>
-            <span className="text-sm font-medium">
-              {/* MOCK Organization Slogan */}
-              Know God. Be Known. Make Him Known.
+        <section
+          id="org-home"
+          className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative flex flex-col min-h-screen overflow-hidden"
+        >
+          {/* Header */}
+          <div className="hidden md:block relative w-full mt-18 h-30 bg-gradient-to-br from-primary-100/70 to-primary-100/90">
+            <span className="flex flex-col relative w-full h-full justify-center px-5 font-semibold text-2xl text-white">
+              <span>{orgData.orgName}</span>
+              <span className="text-sm font-medium">
+                {/* MOCK Organization Slogan */}
+                Know God. Be Known. Make Him Known.
+              </span>
             </span>
-          </span>
-        </div>
+          </div>
 
-        {/* Main Content */}
-        <OrgProvider defaultOrgName={orgName}>
           <div className="flex flex-1  flex-row w-full h-full relative">
-            <MyOrgSideBar orgName={name} />
+            <MyOrgSideBar />
             <main className="flex-1 overflow-y-auto p-4">{children}</main>
           </div>
-        </OrgProvider>
-      </section>
+        </section>
+      </OrgProvider>
     </>
   );
 };

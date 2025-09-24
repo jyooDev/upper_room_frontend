@@ -1,5 +1,5 @@
 import { Cross, Inbox } from "lucide-react";
-
+import { useOrgContext } from "@/contexts";
 // Menu items.
 const items = [
   {
@@ -14,12 +14,9 @@ const items = [
   },
 ];
 
-interface MyOrgSideBarProps {
-  orgName: string;
-}
-
-export default function MyOrgSideBar({ orgName }: MyOrgSideBarProps) {
+export default function MyOrgSideBar() {
   const baseUrl = "/my-organization";
+  const { orgId, orgName } = useOrgContext();
 
   return (
     <>
@@ -28,7 +25,7 @@ export default function MyOrgSideBar({ orgName }: MyOrgSideBarProps) {
           {items.map(({ title, url, icon: Icon }) => (
             <a
               key={title}
-              href={`${baseUrl}/${orgName}/${url}`}
+              href={`${baseUrl}/${encodeURIComponent(orgName)}/${orgId}/${url}`}
               className="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100 transition"
             >
               <Icon className="w-5 h-5 text-gray-500" />

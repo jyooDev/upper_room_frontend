@@ -1,2 +1,2 @@
-export { default as AuthContextProvider } from "./auth-context";
-export { default as OrgProvider } from "./org-context";
+export { default as AuthContextProvider, useAuthContext } from "./auth-context";
+export { default as OrgProvider, useOrgContext } from "./org-context";

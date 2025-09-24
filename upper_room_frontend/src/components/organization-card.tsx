@@ -4,6 +4,7 @@ import { Link } from "react-router";
 
 interface OrganizationCardProps {
   orgName: string;
+  orgId: string;
   logoImage: string;
   join?: boolean;
   onJoinClick?: (orgName: string) => void;
@@ -11,6 +12,7 @@ interface OrganizationCardProps {
 
 const OrganizationCard: React.FC<OrganizationCardProps> = ({
   orgName,
+  orgId,
   logoImage,
   join = false,
   onJoinClick,
@@ -47,7 +49,9 @@ const OrganizationCard: React.FC<OrganizationCardProps> = ({
           <>
             <p className="text-xs text-gray-700">{orgName}</p>
             <Link
-              to={`/my-organization/${encodeURIComponent(orgName)}/sermons`}
+              to={`/my-organization/${encodeURIComponent(
+                orgName
+              )}/${orgId}/sermons`}
             >
               <Button
                 type="button"

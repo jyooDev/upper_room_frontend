@@ -2,12 +2,15 @@ import { createContext, useContext, useState, type ReactNode } from "react";
 
 type OrgContextType = {
   orgName: string;
+  orgId: string;
   setOrgName: (name: string) => void;
+  setOrgId: (id: string) => void;
 };
 
 interface OrgProviderProps {
   children: ReactNode;
   defaultOrgName?: string;
+  defaultOrgId?: string;
 }
 
 const OrgContext = createContext<OrgContextType | undefined>(undefined);
@@ -20,11 +23,15 @@ export const useOrgContext = () => {
   return context;
 };
 
-const OrgProvider = ({ children, defaultOrgName = "" }: OrgProviderProps) => {
+const OrgProvider = ({
+  children,
+  defaultOrgName = "",
+  defaultOrgId = "",
+}: OrgProviderProps) => {
   const [orgName, setOrgName] = useState(defaultOrgName);
-
+  const [orgId, setOrgId] = useState(defaultOrgId);
   return (
-    <OrgContext.Provider value={{ orgName, setOrgName }}>
+    <OrgContext.Provider value={{ orgName, orgId, setOrgName, setOrgId }}>
       {children}
     </OrgContext.Provider>
   );
