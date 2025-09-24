@@ -1,8 +1,4 @@
-import { useState } from "react";
-
-import { Cross, Inbox, Plus } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import PostComposer from "./post-compose";
+import { Cross, Inbox } from "lucide-react";
 
 // Menu items.
 const items = [
@@ -24,7 +20,6 @@ interface MyOrgSideBarProps {
 
 export default function MyOrgSideBar({ orgName }: MyOrgSideBarProps) {
   const baseUrl = "/my-organization";
-  const [open, setOpen] = useState(false);
 
   return (
     <>
@@ -40,19 +35,8 @@ export default function MyOrgSideBar({ orgName }: MyOrgSideBarProps) {
               <span>{title}</span>
             </a>
           ))}
-          <Button
-            variant="outline"
-            size="icon"
-            className="mb-3 w-9 h-9 flex justify-center items-center border-none rounded-full bg-gray-100 hover:bg-gray-200 mx-auto"
-            onClick={() => setOpen(true)}
-            aria-label="Compose post"
-          >
-            <Plus className="w-6 h-6 text-gray-700 font-semibold " />
-          </Button>
         </nav>
       </aside>
-      {/* Compose dialog */}
-      <PostComposer open={open} onClose={() => setOpen(false)} />
     </>
   );
 }
