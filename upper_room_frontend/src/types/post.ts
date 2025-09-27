@@ -15,7 +15,35 @@ export interface Post {
     name: string;
     avatar?: string;
   };
-  postType: string;
+  postType:
+    | "PRAYER_REQUEST"
+    | "EVENT"
+    | "MISSION_UPDATE"
+    | "DAILY"
+    | "TESTIMONY";
   visibility: "PUBLIC" | "PRIVATE";
   createdAt: string;
+  organizationId?: string | null;
+}
+
+export interface IPost {
+  content: {
+    title: string;
+    description?: string;
+    media?: string[];
+  };
+  stats: {
+    likes: number;
+    comments: string[];
+    views: number;
+  };
+  author: string;
+  postType:
+    | "PRAYER_REQUEST"
+    | "EVENT"
+    | "MISSION_UPDATE"
+    | "DAILY"
+    | "TESTIMONY";
+  visibility: "PUBLIC" | "PRIVATE";
+  organizationId?: string | null;
 }

@@ -15,8 +15,12 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Image, X } from "lucide-react"; // Example icons
+import { Image, X } from "lucide-react";
 import { useAuthContext } from "@/contexts/auth-context";
+import { useOrgContext } from "@/contexts/org-context";
+import { type IPost } from "@/types";
+import { createPost } from "@/services/post-service";
+import { useLogger } from "@/hooks";
 
 type PostComposerProps = {
   open: boolean;
@@ -32,33 +36,88 @@ const POST_TYPES = [
 ];
 
 const PostComposer = ({ open, onClose }: PostComposerProps) => {
-  const [content, setContent] = useState("");
-  const [media, setMedia] = useState<File | null>(null);
-  const [postType, setPostType] = useState("DAILY");
-
-  const handleMediaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) setMedia(e.target.files[0]);
-  };
-
-  const handleOnPost = () => {
-    console.log("POSTED");
-  };
   const { user } = useAuthContext();
+  const { orgId } = useOrgContext();
+  const logger = useLogger("/src/components/post-compose.tsx");
+
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [media, setMedia] = useState<string[]>([]); // data URLs
+  const [postType, setPostType] = useState<
+    "PRAYER_REQUEST" | "DAILY" | "MISSION_UPDATE" | "TESTIMONY" | "EVENT"
+  >("DAILY");
+  const [visibility, setVisibility] = useState<"PUBLIC" | "PRIVATE">("PUBLIC");
+
+  // Convert file to data URL
+  const fileToDataUrl = (file: File): Promise<string> =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = (err) => reject(err);
+      reader.readAsDataURL(file);
+    });
+
+  const handleMediaChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    const dataUrls = await Promise.all(Array.from(files).map(fileToDataUrl));
+    setMedia((prev) => [...(prev ?? []), ...dataUrls]);
+  };
+
+  const handleRemoveFile = (index: number) => {
+    setMedia((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const handleOnPost = async () => {
+    if (!user) return;
+
+    const post: IPost = {
+      content: {
+        title,
+        description: content,
+        media,
+      },
+      stats: {
+        likes: 0,
+        comments: [],
+        views: 0,
+      },
+      author: user.uid || "",
+      postType,
+      visibility,
+      organizationId: orgId,
+    };
+
+    logger.debug("POSTED", post);
+    const result = await createPost(post);
+    logger.debug(result);
+    // Reset fields
+    setTitle("");
+    setContent("");
+    setMedia([]);
+    setPostType("DAILY");
+    setVisibility("PUBLIC");
+    onClose();
+  };
+
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="max-w-lg">
         <DialogTitle>New post</DialogTitle>
+
+        {/* User info */}
         <div className="flex items-center space-x-2 mb-4">
           <Avatar className="w-8 h-8">
             <AvatarImage src={user?.photoURL} />
-            <AvatarFallback>
-              {user?.firstName ? user.firstName[0] : "U"}
-            </AvatarFallback>
+            <AvatarFallback>{user?.firstName?.[0] ?? "U"}</AvatarFallback>
           </Avatar>
           <span className="font-semibold">{user?.username || user?.email}</span>
         </div>
+
+        {/* Post type */}
         <Select value={postType} onValueChange={setPostType}>
-          <SelectTrigger className="w-full">
+          <SelectTrigger className="w-full mb-2">
             <SelectValue placeholder="Select post type" />
           </SelectTrigger>
           <SelectContent>
@@ -69,6 +128,33 @@ const PostComposer = ({ open, onClose }: PostComposerProps) => {
             ))}
           </SelectContent>
         </Select>
+
+        {/* Visibility */}
+        <Select
+          value={visibility}
+          onValueChange={(value) =>
+            setVisibility(value as "PUBLIC" | "PRIVATE")
+          }
+        >
+          <SelectTrigger className="w-full mb-2">
+            <SelectValue placeholder="Select visibility" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="PUBLIC">Public</SelectItem>
+            <SelectItem value="PRIVATE">Private</SelectItem>
+          </SelectContent>
+        </Select>
+
+        {/* Title */}
+        <input
+          type="text"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          placeholder="Title"
+          className="w-full p-2 border rounded mb-2"
+        />
+
+        {/* Description */}
         <Textarea
           className="resize-none mb-2"
           value={content}
@@ -76,40 +162,52 @@ const PostComposer = ({ open, onClose }: PostComposerProps) => {
           placeholder="What's new?"
           rows={4}
         />
-        {media && (
-          <div className="flex items-center mb-2">
-            <span className="text-sm">{media.name}</span>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setMedia(null)}
-              className="ml-2"
-              aria-label="Remove attachment"
-            >
-              <X className="w-4 h-4" />
-            </Button>
+
+        {/* Media previews */}
+        {media.length > 0 && (
+          <div className="flex flex-wrap gap-2 mb-2">
+            {media.map((url, i) => (
+              <div
+                key={i}
+                className="relative w-20 h-20 border rounded overflow-hidden"
+              >
+                <img
+                  src={url}
+                  alt={`media-${i}`}
+                  className="w-full h-full object-cover"
+                />
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  className="absolute top-0 right-0"
+                  onClick={() => handleRemoveFile(i)}
+                >
+                  <X className="w-4 h-4" />
+                </Button>
+              </div>
+            ))}
           </div>
         )}
+
+        {/* File input */}
         <div className="flex items-center space-x-2 mb-4">
           <label className="cursor-pointer">
             <Image className="w-5 h-5" />
             <input
               type="file"
               accept="image/*"
+              multiple
               onChange={handleMediaChange}
               className="hidden"
             />
           </label>
         </div>
+
+        {/* Footer */}
         <DialogFooter>
           <Button
-            disabled={!content.trim() && !media}
-            onClick={() => {
-              handleOnPost();
-              setContent("");
-              setMedia(null);
-              onClose();
-            }}
+            disabled={!title.trim() && !content.trim() && media.length === 0}
+            onClick={handleOnPost}
             className="bg-primary-50 hover:bg-primary-100"
           >
             Post

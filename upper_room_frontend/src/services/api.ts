@@ -19,3 +19,37 @@ usersApi.interceptors.request.use(async (config) => {
   }
   return config;
 });
+
+export const postsApi = axios.create({
+  baseURL: config.serverUrl + "/v1/posts",
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+postsApi.interceptors.request.use(async (config) => {
+  const auth = getAuth();
+  const user = auth.currentUser;
+  if (user) {
+    const token = await user.getIdToken();
+    config.headers["Authorization"] = `Bearer ${token}`;
+  }
+  return config;
+});
+
+export const organizationsApi = axios.create({
+  baseURL: config.serverUrl + "/v1/organizations",
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+organizationsApi.interceptors.request.use(async (config) => {
+  const auth = getAuth();
+  const user = auth.currentUser;
+  if (user) {
+    const token = await user.getIdToken();
+    config.headers["Authorization"] = `Bearer ${token}`;
+  }
+  return config;
+});
