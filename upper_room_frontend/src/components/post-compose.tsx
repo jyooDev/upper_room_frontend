@@ -89,7 +89,6 @@ const PostComposer = ({ open, onClose }: PostComposerProps) => {
       organizationId: orgId,
     };
 
-    logger.debug("POSTED", post);
     const result = await createPost(post);
     logger.debug(result);
     // Reset fields
