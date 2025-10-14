@@ -14,6 +14,7 @@ const MyOrganizationLayout = ({ children }: { children: React.ReactNode }) => {
   }>();
   const decodedName = orgNameParam ? decodeURIComponent(orgNameParam) : "";
 
+  logger.debug(orgIdParam);
   const [loading, setLoading] = useState(true);
   const [orgData, setOrgData] = useState<{ orgId: string; orgName: string }>({
     orgId: orgIdParam || "",
@@ -25,7 +26,8 @@ const MyOrganizationLayout = ({ children }: { children: React.ReactNode }) => {
       logger.debug("Initializing Org....");
       if (orgIdParam) {
         setOrgData({ orgId: orgIdParam, orgName: decodedName });
-      } else if (decodedName) {
+      }
+      if (decodedName) {
         const org: Org | null = await getOrgByName(decodedName);
         if (org) {
           setOrgData({
@@ -39,7 +41,7 @@ const MyOrganizationLayout = ({ children }: { children: React.ReactNode }) => {
       setLoading(false);
     };
     initializeOrg();
-  }, [orgIdParam, decodedName]);
+  }, [decodedName]);
 
   if (loading) {
     return (
