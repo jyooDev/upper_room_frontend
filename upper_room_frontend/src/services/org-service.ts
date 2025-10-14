@@ -43,3 +43,13 @@ export const getOrgByMemberId = async (
     return null;
   }
 };
+
+export const getMyOrganizations = async (userId: string) => {
+  try {
+    const res = await organizationsApi.get(`/${userId}`);
+    return res.data;
+  } catch (err) {
+    logger.error(err);
+    return null;
+  }
+};

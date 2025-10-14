@@ -21,6 +21,7 @@ import { useOrgContext } from "@/contexts/org-context";
 import { type IPost } from "@/types";
 import { createPost } from "@/services/post-service";
 import { useLogger } from "@/hooks";
+// import imageCompression, { type Options } from "browser-image-compression";
 
 type PostComposerProps = {
   open: boolean;
@@ -35,6 +36,8 @@ const POST_TYPES = [
   { value: "EVENT", label: "Event" },
 ];
 
+type PostType = (typeof POST_TYPES)[number]["value"];
+
 const PostComposer = ({ open, onClose }: PostComposerProps) => {
   const { user } = useAuthContext();
   const { orgId } = useOrgContext();
@@ -43,26 +46,39 @@ const PostComposer = ({ open, onClose }: PostComposerProps) => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [media, setMedia] = useState<string[]>([]); // data URLs
-  const [postType, setPostType] = useState<
-    "PRAYER_REQUEST" | "DAILY" | "MISSION_UPDATE" | "TESTIMONY" | "EVENT"
-  >("DAILY");
+  const [postType, setPostType] = useState<PostType>("DAILY");
   const [visibility, setVisibility] = useState<"PUBLIC" | "PRIVATE">("PUBLIC");
 
-  // Convert file to data URL
-  const fileToDataUrl = (file: File): Promise<string> =>
-    new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result as string);
-      reader.onerror = (err) => reject(err);
-      reader.readAsDataURL(file);
-    });
-
-  const handleMediaChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleMediaUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
+    try {
+      // const options: Options = {
+      //   maxSizeMB: 1,
+      //   maxWidthOrHeight: 1920,
+      //   useWebWorker: true,
+      // };
 
-    const dataUrls = await Promise.all(Array.from(files).map(fileToDataUrl));
-    setMedia((prev) => [...(prev ?? []), ...dataUrls]);
+      const newMedia = await Promise.all(
+        Array.from(files).map(async (file) => {
+          return URL.createObjectURL(file);
+          // Refactor to use cloud storage
+          // const compressed = await imageCompression(file, options);
+          // return new Promise<string>((resolve, reject) => {
+          //   const reader = new FileReader();
+          //   reader.onload = () => resolve(reader.result as string);
+          //   reader.onerror = reject;
+          //   reader.readAsDataURL(compressed);
+          // });
+        })
+      );
+
+      logger.debug(newMedia);
+      setMedia((prev) => [...(prev ?? []), ...newMedia]);
+    } catch (error) {
+      logger.debug("Error uploading media:", error);
+      window.alert("Failed to process image(s). Please try again.");
+    }
   };
 
   const handleRemoveFile = (index: number) => {
@@ -196,7 +212,7 @@ const PostComposer = ({ open, onClose }: PostComposerProps) => {
               type="file"
               accept="image/*"
               multiple
-              onChange={handleMediaChange}
+              onChange={(e) => handleMediaUpload(e)}
               className="hidden"
             />
           </label>

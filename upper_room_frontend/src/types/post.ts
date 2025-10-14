@@ -38,12 +38,7 @@ export interface IPost {
     views: number;
   };
   author: string;
-  postType:
-    | "PRAYER_REQUEST"
-    | "EVENT"
-    | "MISSION_UPDATE"
-    | "DAILY"
-    | "TESTIMONY";
+  postType: string;
   visibility: "PUBLIC" | "PRIVATE";
   organizationId?: string | null;
 }
