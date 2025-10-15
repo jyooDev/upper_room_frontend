@@ -15,11 +15,7 @@ import { Input } from "@/components/ui/input";
 import { FaSearch } from "react-icons/fa";
 
 import { OrganizationCard, Loader } from "../components";
-import {
-  getMyOrganizations,
-  getOrgByMemberId,
-  type Org,
-} from "@/services/org-service";
+import { getMyOrganizations } from "@/services/org-service";
 import { type IOrganization } from "@/types";
 import { useAuthContext } from "../contexts/auth-context";
 import Logger from "../utils/logger";
@@ -32,28 +28,14 @@ const MyOrganizations = () => {
   const [isJoinResultDialogOpen, setIsJoinResultDialogOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [joinResultMessage, setJoinResultMessage] = useState<string>("");
-  const [organizations, setOrganizations] = useState<Org[]>([]);
+  const [organizations, setOrganizations] = useState<IOrganization[]>([]);
   const { user } = useAuthContext();
-
-  const [orgs, setOrgs] = useState<IOrganization[]>([]);
   useEffect(() => {
     const fetchMyOrganizations = async () => {
-      if (user && user.uid) {
-        const data = await getMyOrganizations(user.uid);
-        console.log(data);
-        setOrgs(data);
-      }
-    };
-    fetchMyOrganizations();
-  }, [user]);
-
-  useEffect(() => {
-    const fetchOrgs = async () => {
       if (!user?.uid) return;
-
       try {
-        const orgs = await getOrgByMemberId(user.uid);
-        logger.debug("Fetched orgs: ", orgs);
+        const orgs = await getMyOrganizations(user.uid);
+        console.log(orgs);
         if (!orgs) return;
         setOrganizations(orgs);
       } catch (error) {
@@ -62,9 +44,9 @@ const MyOrganizations = () => {
         setLoading(false);
       }
     };
+    fetchMyOrganizations();
+  }, [user]);
 
-    fetchOrgs();
-  }, [user?.uid]);
   const handleJoinOrganization = async (orgName: string) => {
     try {
       setIsLoadingDialogOpen(true);
@@ -99,8 +81,6 @@ const MyOrganizations = () => {
           </div>
 
           {/* Main Content */}
-
-          {/* -----UI MOCK START----- */}
           <div className="mt-20 flex grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 relative max-w-7xl gap-4 text-sm">
             {loading ? (
               <div className="flex flex-col items-center justify-center py-8 gap-4 w-full mx-auto">

@@ -1,6 +1,6 @@
 import { organizationsApi } from "./api";
 import Logger from "../utils/logger";
-
+import { type IOrganization } from "@/types";
 const logger = new Logger("/src/services/org-service.ts");
 
 export interface Org {
@@ -27,9 +27,9 @@ export const getOrgByName = async (orgName: string): Promise<Org | null> => {
   }
 };
 
-export const getOrgByMemberId = async (
+export const getMyOrganizations = async (
   userId: string
-): Promise<Org[] | null> => {
+): Promise<IOrganization[] | null> => {
   try {
     const res = await organizationsApi.get(
       `/myorg?userId=${encodeURIComponent(userId)}`
@@ -37,16 +37,6 @@ export const getOrgByMemberId = async (
     logger.debug(
       `Organizations for member ${userId}: ${JSON.stringify(res.data)}`
     );
-    return res.data;
-  } catch (err) {
-    logger.error(err);
-    return null;
-  }
-};
-
-export const getMyOrganizations = async (userId: string) => {
-  try {
-    const res = await organizationsApi.get(`/${userId}`);
     return res.data;
   } catch (err) {
     logger.error(err);
