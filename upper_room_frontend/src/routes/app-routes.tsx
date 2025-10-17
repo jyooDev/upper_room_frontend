@@ -15,7 +15,7 @@ const AppRoutes = (
     <Route path="/my-profile" element={<MyProfile />}></Route>
     <Route path="/my-organizations" element={<MyOrganizations />}></Route>
     <Route
-      path="/my-organization/:orgName/:orgId/sermons"
+      path="/my-organization/sermons/:orgName/:orgId"
       element={
         <MyOrganizationLayout>
           <MyOrganizationSermons />
@@ -24,7 +24,7 @@ const AppRoutes = (
     ></Route>
 
     <Route
-      path="/my-organization/:orgName/:orgId/posts"
+      path="/my-organization/posts/:orgName/:orgId"
       element={
         <MyOrganizationLayout>
           <MyOrganizationPosts />

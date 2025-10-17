@@ -1,4 +1,10 @@
-import { createContext, useContext, useState, type ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  type ReactNode,
+} from "react";
 
 type OrgContextType = {
   orgName: string;
@@ -30,6 +36,15 @@ const OrgProvider = ({
 }: OrgProviderProps) => {
   const [orgName, setOrgName] = useState(defaultOrgName);
   const [orgId, setOrgId] = useState(defaultOrgId);
+
+  useEffect(() => {
+    setOrgName(defaultOrgName || "");
+  }, [defaultOrgName]);
+
+  useEffect(() => {
+    setOrgId(defaultOrgId || "");
+  }, [defaultOrgId]);
+
   return (
     <OrgContext.Provider value={{ orgName, orgId, setOrgName, setOrgId }}>
       {children}
