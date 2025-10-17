@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 
-import { Navbar } from "@/components";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -14,7 +13,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { FaSearch } from "react-icons/fa";
 
-import { OrganizationCard, Loader } from "../components";
+import {
+  OrganizationCard,
+  JoinOrganizationCard,
+  Navbar,
+  Loader,
+} from "@/components";
 import { getMyOrganizations } from "@/services/org-service";
 import { type IOrganization } from "@/types";
 import { useAuthContext } from "../contexts/auth-context";
@@ -126,11 +130,11 @@ const MyOrganizations = () => {
                         ></Input>
                       </div>
                       <div className="relative w-full grid grid-cols-2 sm:grid-cols-3 max-w-7xl gap-4 text-sm mx-auto">
-                        <OrganizationCard
+                        {/* UI MOCK, REPLACE WITH CARDS THAT MATCH SEARCH */}
+                        <JoinOrganizationCard
                           orgName="Young Adult Ministry"
                           orgId="disafjOrgId1@sds"
                           logoImage="https://southerncharmdesign.co/wp-content/uploads/2018/05/YoungAdultMinisty_Logo_2.jpg"
-                          join={true}
                           onJoinClick={handleJoinOrganization}
                         />
                       </div>
