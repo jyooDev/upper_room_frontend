@@ -8,34 +8,24 @@ import { CiHeart } from "react-icons/ci";
 import { LuMessageCircle } from "react-icons/lu";
 import { GrView } from "react-icons/gr";
 
+import { useEffect } from "react";
+
 import { useOrgContext } from "@/contexts/org-context";
+import { getUser } from "@/services/user-service";
+import { type Post } from "@/types";
 
-interface PostCardProps {
-  post: {
-    _id: string;
-    content: {
-      title: string;
-      description?: string | null;
-      media?: string[];
-    };
-    stats: {
-      likes: number;
-      views: number;
-      comments: any[];
-    };
-    author: {
-      _id: string;
-      name: string;
-      avatar?: string;
-    };
-    postType: string;
-    visibility: string;
-    createdAt: string;
-  };
-}
 
-const PostCard = ({ post }: PostCardProps) => {
+const PostCard = (post : Post) => {
   const { orgName } = useOrgContext();
+
+  useEffect(() => {
+    const fetchAuthor = async () => {
+      try {
+        if (!post.author) return;
+        const data = await getUser(post.author);
+      } catch (error) {}
+    };
+  });
   return (
     <a href={`/my-organization/${encodeURI(orgName)}/posts/${post._id}`}>
       <Card className="p-4 border-none rounded-none">

@@ -1,91 +1,80 @@
-import { Feed } from "@/components";
-import { useState } from "react";
-import { mockPosts } from "@/mock/post-mock";
+import { Feed, Loader } from "@/components";
+import { useState, useEffect, useMemo } from "react";
+import { useOrgContext } from "@/contexts";
+import { getPostsByOrgId } from "@/services/post-service";
+import { type Post } from "@/types";
 
 const MyOrganizationPosts = () => {
+  const { orgId } = useOrgContext();
   const [postType, setPostType] = useState<string>("ALL");
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      if (!orgId) return;
+
+      setLoading(true);
+      const data = await getPostsByOrgId(orgId);
+      if (data.posts) setPosts(data.posts);
+      setLoading(false);
+    };
+
+    fetchPosts();
+  }, [orgId]);
+
+  const filteredPosts = useMemo(
+    () =>
+      postType === "ALL" ? posts : posts.filter((p) => p.postType === postType),
+    [posts, postType]
+  );
+  console.log(filteredPosts);
+
   return (
     <div className="flex flex-col w-full h-full gap-3 overflow-auto">
       <div className="sticky flex flex-col w-full h-full overflow-hidden">
         <div className="flex flex-row">
-          <button
-            className={
-              "flex py-1 px-4 font-semibold " +
-              (postType == "ALL"
-                ? "bg-gray-600 hover:bg-gray-700 text-white"
-                : "bg-gray-100 hover:bg-gray-200 text-gray-700")
-            }
-            onClick={() => setPostType("ALL")}
-          >
-            ALL
-          </button>
-          <button
-            className={
-              "flex py-1 px-4 font-semibold " +
-              (postType == "PRAYER_REQUEST"
-                ? "bg-gray-600 hover:bg-gray-700 text-white"
-                : "bg-gray-100 hover:bg-gray-200 text-gray-700")
-            }
-            onClick={() => setPostType("PRAYER_REQUEST")}
-          >
-            PRAYER
-          </button>
-          <button
-            className={
-              "flex py-1 px-4 font-semibold " +
-              (postType == "EVENT"
-                ? "bg-gray-600 hover:bg-gray-700 text-white"
-                : "bg-gray-100 hover:bg-gray-200 text-gray-700")
-            }
-            onClick={() => setPostType("EVENT")}
-          >
-            EVENT
-          </button>
-          <button
-            className={
-              "flex py-1 px-4 font-semibold " +
-              (postType == "MISSION_UPDATE"
-                ? "bg-gray-600 hover:bg-gray-700 text-white"
-                : "bg-gray-100 hover:bg-gray-200 text-gray-700")
-            }
-            onClick={() => setPostType("MISSION_UPDATE")}
-          >
-            MISSION
-          </button>
-
-          <button
-            className={
-              "flex py-1 px-4 font-semibold " +
-              (postType == "DAILY"
-                ? "bg-gray-600 hover:bg-gray-700 text-white"
-                : "bg-gray-100 hover:bg-gray-200 text-gray-700")
-            }
-            onClick={() => setPostType("DAILY")}
-          >
-            DAILY
-          </button>
-          <button
-            className={
-              "flex py-1 px-4 font-semibold " +
-              (postType == "TESTIMONY"
-                ? "bg-gray-600 hover:bg-gray-700 text-white"
-                : "bg-gray-100 hover:bg-gray-200 text-gray-700")
-            }
-            onClick={() => setPostType("TESTIMONY")}
-          >
-            TESTIMONY
-          </button>
+          <div className="flex flex-row">
+            {[
+              "ALL",
+              "PRAYER_REQUEST",
+              "EVENT",
+              "MISSION_UPDATE",
+              "DAILY",
+              "TESTIMONY",
+            ].map((type) => (
+              <button
+                key={type}
+                className={
+                  "flex py-1 px-4 font-semibold " +
+                  (postType === type
+                    ? "bg-gray-600 hover:bg-gray-700 text-white"
+                    : "bg-gray-100 hover:bg-gray-200 text-gray-700")
+                }
+                onClick={() => setPostType(type)}
+              >
+                {type === "PRAYER_REQUEST"
+                  ? "PRAYER"
+                  : type === "MISSION_UPDATE"
+                  ? "MISSION"
+                  : type}
+              </button>
+            ))}
+          </div>
+          <span className="flex w-full border-t border-gray-300"></span>
         </div>
-        <span className="flex w-full border-t border-gray-300"></span>
-      </div>
-      <div className="mt-5 flex flex-col">
-        <Feed
-          posts={
-            postType === "ALL"
-              ? mockPosts
-              : mockPosts.filter((p) => p.postType === postType)
-          }
-        />
+
+        {/* Feeds */}
+        <div className="mt-5 flex flex-col">
+          {loading ? (
+            <Loader
+              isLoadingDialogOpen={false}
+              loaderMessage={"Loading Good News!"}
+            />
+          ) : (
+            <Feed posts={filteredPosts} />
+          )}
+        </div>
       </div>
     </div>
   );

@@ -2,8 +2,7 @@ import { useState } from "react";
 
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
-import PostComposer from "./post-compose";
-import { PostCard } from ".";
+import { PostComposer, PostCard } from "@/components";
 
 const Feed = ({ posts }: { posts: any[] }) => {
   const [open, setOpen] = useState(false);
