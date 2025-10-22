@@ -37,7 +37,11 @@ export interface IPost {
     comments: string[];
     views: number;
   };
-  author: string;
+  author: {
+    _id: string;
+    name: string;
+    avatar?: string;
+  };
   postType: string;
   visibility: "PUBLIC" | "PRIVATE";
   organizationId?: string | null;

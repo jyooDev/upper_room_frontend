@@ -99,7 +99,11 @@ const PostComposer = ({ open, onClose }: PostComposerProps) => {
         comments: [],
         views: 0,
       },
-      author: user.uid || "",
+      author: {
+        _id: user.uid || "",
+        name: user.displayName || "",
+        avatar: user.photoURL,
+      },
       postType,
       visibility,
       organizationId: orgId,
@@ -131,7 +135,10 @@ const PostComposer = ({ open, onClose }: PostComposerProps) => {
         </div>
 
         {/* Post type */}
-        <Select value={postType} onValueChange={setPostType}>
+        <Select
+          value={postType}
+          onValueChange={(value) => setPostType(value as PostType)}
+        >
           <SelectTrigger className="w-full mb-2">
             <SelectValue placeholder="Select post type" />
           </SelectTrigger>
