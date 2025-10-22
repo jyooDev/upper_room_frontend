@@ -28,7 +28,6 @@ const MyOrganizationPosts = () => {
       postType === "ALL" ? posts : posts.filter((p) => p.postType === postType),
     [posts, postType]
   );
-  console.log(filteredPosts);
 
   return (
     <div className="flex flex-col w-full h-full gap-3 overflow-auto">

@@ -8,24 +8,11 @@ import { CiHeart } from "react-icons/ci";
 import { LuMessageCircle } from "react-icons/lu";
 import { GrView } from "react-icons/gr";
 
-import { useEffect } from "react";
-
 import { useOrgContext } from "@/contexts/org-context";
-import { getUser } from "@/services/user-service";
 import { type Post } from "@/types";
 
-
-const PostCard = (post : Post) => {
+const PostCard = ({ post }: { post: Post }) => {
   const { orgName } = useOrgContext();
-
-  useEffect(() => {
-    const fetchAuthor = async () => {
-      try {
-        if (!post.author) return;
-        const data = await getUser(post.author);
-      } catch (error) {}
-    };
-  });
   return (
     <a href={`/my-organization/${encodeURI(orgName)}/posts/${post._id}`}>
       <Card className="p-4 border-none rounded-none">
@@ -33,7 +20,7 @@ const PostCard = (post : Post) => {
         <div className="flex items-center gap-3">
           <Avatar className="w-8 h-8">
             <AvatarImage src={post.author.avatar} />
-            <AvatarFallback>{post.author.name[0]}</AvatarFallback>
+            <AvatarFallback>{post.author.name[0].toUpperCase()}</AvatarFallback>
           </Avatar>
           <div className="text-sm">
             <div className="font-semibold">{post.author.name}</div>
