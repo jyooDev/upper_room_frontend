@@ -16,6 +16,7 @@ const MyOrganizationPosts = () => {
 
       setLoading(true);
       const data = await getPostsByOrgId(orgId);
+      console.log(data.posts);
       if (data.posts) setPosts(data.posts);
       setLoading(false);
     };

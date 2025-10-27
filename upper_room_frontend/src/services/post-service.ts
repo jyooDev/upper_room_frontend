@@ -32,3 +32,5 @@ export const getPostsByOrgId = async (orgId: string) => {
     logger.debug("ERROR - ", error);
   }
 };
+
+export const likePost = async (postId: string, userId: string) => {};

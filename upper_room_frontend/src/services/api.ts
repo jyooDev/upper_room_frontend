@@ -53,3 +53,20 @@ organizationsApi.interceptors.request.use(async (config) => {
   }
   return config;
 });
+
+export const commentsApi = axios.create({
+  baseURL: config.serverUrl + "/v1/comments",
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+commentsApi.interceptors.request.use(async (config) => {
+  const auth = getAuth();
+  const user = auth.currentUser;
+  if (user) {
+    const token = await user.getIdToken();
+    config.headers["Authorization"] = `Bearer ${token}`;
+  }
+  return config;
+});
