@@ -139,7 +139,7 @@ const PostDetail = ({ open, onClose, post }: PostDetailProps) => {
                       comments.map((comment, i) => (
                         <div
                           key={i}
-                          className="flex items-center justify-between w-full space-x-2 text-sm my-3"
+                          className="flex items-center justify-between w-full space-x-3 text-sm my-3"
                         >
                           <Avatar className="w-8 h-8">
                             <AvatarImage
@@ -158,7 +158,7 @@ const PostDetail = ({ open, onClose, post }: PostDetailProps) => {
                             </span>
                             <span> {comment.comment}</span>
                           </div>
-                          <div>
+                          <div className="relative block w-[1/5] items-start">
                             <LikeButton
                               objectId={comment._id}
                               userId={user?.uid || ""}

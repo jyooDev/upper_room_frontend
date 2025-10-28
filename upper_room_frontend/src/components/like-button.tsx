@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Heart } from "lucide-react";
-import { isLikedComment } from "@/services/comment-service";
+import { isLikedComment, updateCommentLike } from "@/services/comment-service";
 
 interface LikeButtonProps {
   objectId: string;
@@ -37,14 +37,21 @@ const LikeButton = ({
     setLoading(true);
 
     try {
-      // optimistic update
-      setLiked(!liked);
-      setLikes((prev) => (liked ? prev - 1 : prev + 1));
+      let data;
+      if (type === "COMMENT") {
+        data = await updateCommentLike(objectId, userId);
+        if (data.comment.likedBy.includes(userId)) {
+          setLiked(true);
+          setLikes((prev) => prev + 1);
+        } else {
+          setLiked(false);
+          setLikes((prev) => prev - 1);
+        }
+      } else if (type === "POST") {
+        // UPDATE POST LIKES
+      }
     } catch (err) {
       console.error(err);
-      // revert if failed
-      setLiked((prev) => !prev);
-      setLikes((prev) => (liked ? prev + 1 : prev - 1));
     } finally {
       setLoading(false);
     }

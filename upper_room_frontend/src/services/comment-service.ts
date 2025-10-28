@@ -15,7 +15,17 @@ export const getCommentsByPostId = async (postId: string) => {
   }
 };
 
-export const likeComment = async (commentId: string, userId: string) => {};
+export const updateCommentLike = async (commentId: string, userId: string) => {
+  try {
+    const res = await commentsApi.put("/update-like", {
+      params: { commentId, userId },
+    });
+    const data = res.data;
+    return data;
+  } catch (error) {
+    logger.error("ERROR - ", error);
+  }
+};
 
 export const isLikedComment = async (commentId: string, userId: string) => {
   try {
