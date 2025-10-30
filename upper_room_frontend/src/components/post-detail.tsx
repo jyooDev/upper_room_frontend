@@ -164,6 +164,7 @@ const PostDetail = ({ open, onClose, post }: PostDetailProps) => {
                               userId={user?.uid || ""}
                               type="COMMENT"
                               likeCounts={comment.stats.likes}
+                              showCounts={false}
                             />
                           </div>
                         </div>

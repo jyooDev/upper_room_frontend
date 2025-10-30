@@ -33,4 +33,26 @@ export const getPostsByOrgId = async (orgId: string) => {
   }
 };
 
-export const likePost = async (postId: string, userId: string) => {};
+export const isLikedPost = async (postId: string, userId: string) => {
+  try {
+    const res = await postsApi.get(
+      `is-liked?postId=${postId}&userId=${userId}`
+    );
+    const data = res.data;
+    return data;
+  } catch (error) {
+    logger.debug("ERROR - ", error);
+  }
+};
+
+export const updatePostLike = async (postId: string, userId: string) => {
+  try {
+    const res = await postsApi.put("update-like", {
+      params: { postId, userId },
+    });
+    const data = res.data;
+    return data;
+  } catch (error) {
+    logger.debug("ERROR - ", error);
+  }
+};
