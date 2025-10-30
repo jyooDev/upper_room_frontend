@@ -8,8 +8,10 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { DialogTitle } from "@radix-ui/react-dialog";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Send } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 
 import { type Post, type Comment } from "@/types";
@@ -126,10 +128,13 @@ const PostDetail = ({ open, onClose, post }: PostDetailProps) => {
                     </div>
                   </div>
                 </div>
+
                 {/* Content / Comments  */}
-                <div className="relative flex-col w-full h-full max-h-[94%] overflow-y-auto p-2.5 text-sm text-gray-800">
-                  <div>{post.content.description}</div>
-                  <div className="relative overflow-y-auto w-full">
+                <div className="relative flex flex-col w-full h-full max-h-[94%] overflow-hidden p-2.5 text-sm text-gray-800">
+                  <div className="border-b border-gray-100 w-full p-2 shrink-0">
+                    {post.content.description}
+                  </div>
+                  <div className="relative flex-grow overflow-y-auto w-full border-b border-gray-100 p-2">
                     {loadingComments ? (
                       <Loader
                         isLoadingDialogOpen={false}
@@ -172,6 +177,30 @@ const PostDetail = ({ open, onClose, post }: PostDetailProps) => {
                     ) : (
                       <p className="text-gray-500 text-sm">No replies yet.</p>
                     )}
+                  </div>
+                  <div className="relative shrink-0">
+                    <div className="flex gap-2 items-center justify-start py-3 px-2">
+                      <LikeButton
+                        objectId={post._id}
+                        userId={user?.uid || ""}
+                        type="POST"
+                        showCounts={true}
+                        likeCounts={post.stats.likes}
+                      />
+                    </div>
+                    <div className="flex flex-1 gap-1">
+                      <Input
+                        // value={value}
+                        // onChange={(e) => onChange(e.target.value)}
+                        placeholder="Type a comment..."
+                      />
+                      <Button
+                        // onClick={onSend}
+                        className="bg-gray-500"
+                      >
+                        <Send className="h-4 w-4" />
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </div>
