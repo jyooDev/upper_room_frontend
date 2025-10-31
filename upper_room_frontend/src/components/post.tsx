@@ -16,7 +16,6 @@ import { useAuthContext } from "@/contexts";
 const PostCard = ({ post }: { post: Post }) => {
   const [openDetailPopup, setOpenDetailPopup] = useState(false);
   const { user } = useAuthContext();
-  console.log(user?.uid);
   const userId = user?.uid ?? null;
 
   return (
