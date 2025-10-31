@@ -17,7 +17,7 @@ import { formatDistanceToNow } from "date-fns";
 import { type Post, type Comment } from "@/types";
 import { useLogger } from "@/hooks";
 import { LikeButton, Loader } from "@/components";
-import { getCommentsByPostId } from "@/services/comment-service";
+import { createComment, getCommentsByPostId } from "@/services/comment-service";
 import { getUser } from "@/services/user-service";
 import { useAuthContext } from "@/contexts/auth-context";
 // import imageCompression, { type Options } from "browser-image-compression";
@@ -34,7 +34,11 @@ const PostDetail = ({ open, onClose, post }: PostDetailProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [comments, setComments] = useState<Comment[]>([]);
   const [loadingComments, setLoadingComments] = useState<boolean>(true);
+  const [disableCommentButton, setDisableCommentButton] =
+    useState<boolean>(false);
+  const [newComment, setNewComment] = useState<string>("");
   const { user } = useAuthContext();
+
   useEffect(() => {
     if (!open) return;
     const fetchComments = async () => {
@@ -70,6 +74,38 @@ const PostDetail = ({ open, onClose, post }: PostDetailProps) => {
   const nextMedia = () =>
     setCurrentIndex((i) => (i === media.length - 1 ? 0 : i + 1));
 
+  const onCommentInputChange = (comment: string) => {
+    setNewComment(comment);
+    setDisableCommentButton(comment.trim() === "");
+  };
+
+  const onPostNewComment = async () => {
+    if (!user || !user.uid) {
+      return;
+    }
+
+    setLoadingComments(true);
+    const data = await createComment(newComment, user.uid, post._id);
+    if (data.comment) {
+      const comment = data.comment;
+
+      const newCommentWithAuthor: Comment = {
+        _id: comment._id,
+        post: comment.post,
+        comment: comment.comment,
+        author: comment.author,
+        likedBy: comment.likedBy,
+        stats: {
+          likes: comment.stats.likes,
+        },
+        authorUsername:
+          user?.username ?? `${user?.firstName} ${user?.lastName}`,
+        authorAvatar: user?.photoURL,
+      };
+      setComments((prev) => [...prev, newCommentWithAuthor]);
+    }
+    setLoadingComments(false);
+  };
   return (
     <div className="flex items-center">
       <Dialog open={open} onOpenChange={onClose}>
@@ -164,13 +200,15 @@ const PostDetail = ({ open, onClose, post }: PostDetailProps) => {
                             <span> {comment.comment}</span>
                           </div>
                           <div className="relative block w-[1/5] items-start">
-                            <LikeButton
-                              objectId={comment._id}
-                              userId={user?.uid || ""}
-                              type="COMMENT"
-                              likeCounts={comment.stats.likes}
-                              showCounts={false}
-                            />
+                            {user?.uid && (
+                              <LikeButton
+                                objectId={comment._id}
+                                userId={user?.uid || ""}
+                                type="COMMENT"
+                                likeCounts={comment.stats.likes}
+                                showCounts={false}
+                              />
+                            )}
                           </div>
                         </div>
                       ))
@@ -190,12 +228,13 @@ const PostDetail = ({ open, onClose, post }: PostDetailProps) => {
                     </div>
                     <div className="flex flex-1 gap-1">
                       <Input
-                        // value={value}
-                        // onChange={(e) => onChange(e.target.value)}
+                        value={newComment}
+                        onChange={(e) => onCommentInputChange(e.target.value)}
                         placeholder="Type a comment..."
                       />
                       <Button
-                        // onClick={onSend}
+                        disabled={disableCommentButton}
+                        onClick={onPostNewComment}
                         className="bg-gray-500"
                       >
                         <Send className="h-4 w-4" />

@@ -15,6 +15,23 @@ export const getCommentsByPostId = async (postId: string) => {
   }
 };
 
+export const createComment = async (
+  comment: string,
+  author: string,
+  post: string
+) => {
+  try {
+    const res = await commentsApi.post("", {
+      comment: { comment, author, post },
+    });
+    const data = res.data;
+    logger.debug("CREATED COMMENT", data);
+    return data;
+  } catch (error) {
+    logger.error("ERROR - ", error);
+  }
+};
+
 export const updateCommentLike = async (commentId: string, userId: string) => {
   try {
     const res = await commentsApi.put("/update-like", {

@@ -16,6 +16,8 @@ import { useAuthContext } from "@/contexts";
 const PostCard = ({ post }: { post: Post }) => {
   const [openDetailPopup, setOpenDetailPopup] = useState(false);
   const { user } = useAuthContext();
+  console.log(user?.uid);
+  const userId = user?.uid ?? null;
 
   return (
     <>
@@ -68,13 +70,15 @@ const PostCard = ({ post }: { post: Post }) => {
           {/* Reactions */}
           <div className="flex gap-6 mt-4 text-sm text-muted-foreground">
             <span className="flex jusitfy-center items-center gap-1">
-              <LikeButton
-                objectId={post._id}
-                userId={user?.uid || ""}
-                type="POST"
-                likeCounts={post.stats.likes}
-                showCounts={true}
-              />
+              {userId && (
+                <LikeButton
+                  objectId={post._id}
+                  userId={userId}
+                  type="POST"
+                  likeCounts={post.stats.likes}
+                  showCounts
+                />
+              )}
             </span>
             <span className="flex jusitfy-center items-center gap-1">
               <LuMessageCircle />
