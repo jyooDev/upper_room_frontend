@@ -5,7 +5,12 @@ import { Button } from "@/components/ui/button";
 import { PostComposer, PostCard } from "@/components";
 import type { Post } from "@/types";
 
-const Feed = ({ posts }: { posts: Post[] }) => {
+type FeedProps = {
+  posts: Post[];
+  isPublic?: boolean;
+};
+
+const Feed = ({ posts, isPublic }: FeedProps) => {
   const [open, setOpen] = useState(false);
   return (
     <>
@@ -29,7 +34,11 @@ const Feed = ({ posts }: { posts: Post[] }) => {
           </div>
         </ScrollArea>
       </div>
-      <PostComposer open={open} onClose={() => setOpen(false)} />
+      <PostComposer
+        open={open}
+        onClose={() => setOpen(false)}
+        isPublic={isPublic}
+      />
     </>
   );
 };

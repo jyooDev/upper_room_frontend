@@ -33,6 +33,18 @@ export const getPostsByOrgId = async (orgId: string) => {
   }
 };
 
+export const getAllPublicPosts = async () => {
+  // GET api/v1/posts/public
+  try {
+    const res = await postsApi.get("/public");
+    const data = res.data;
+    // logger.debug("FETCHED DATA - ", data);
+    return data;
+  } catch (error) {
+    logger.debug("ERROR - ", error);
+  }
+};
+
 export const isLikedPost = async (postId: string, userId: string) => {
   try {
     const res = await postsApi.get(

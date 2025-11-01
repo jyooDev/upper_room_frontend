@@ -6,7 +6,9 @@ import {
   MyOrganizationLayout,
   MyOrganizationSermons,
   MyOrganizationPosts,
+  PublicPosts,
 } from "../pages";
+import PublicLayout from "@/pages/layouts/public-layout";
 
 const AppRoutes = (
   <>
@@ -14,6 +16,14 @@ const AppRoutes = (
     <Route path="*" element={<Home />} />
     <Route path="/my-profile" element={<MyProfile />}></Route>
     <Route path="/my-organizations" element={<MyOrganizations />}></Route>
+    <Route
+      path="/public"
+      element={
+        <PublicLayout>
+          <PublicPosts />
+        </PublicLayout>
+      }
+    ></Route>
     <Route
       path="/my-organization/sermons/:orgName/:orgId"
       element={

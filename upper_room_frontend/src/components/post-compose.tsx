@@ -26,6 +26,7 @@ import { useLogger } from "@/hooks";
 type PostComposerProps = {
   open: boolean;
   onClose: () => void;
+  isPublic?: boolean;
 };
 
 const POST_TYPES = [
@@ -38,9 +39,13 @@ const POST_TYPES = [
 
 type PostType = (typeof POST_TYPES)[number]["value"];
 
-const PostComposer = ({ open, onClose }: PostComposerProps) => {
+const PostComposer = ({ open, onClose, isPublic }: PostComposerProps) => {
   const { user } = useAuthContext();
-  const { orgId } = useOrgContext();
+  let organizationId = null;
+  if (!isPublic) {
+    const { orgId } = useOrgContext();
+    organizationId = orgId;
+  }
   const logger = useLogger("/src/components/post-compose.tsx");
 
   const [title, setTitle] = useState("");
@@ -106,7 +111,7 @@ const PostComposer = ({ open, onClose }: PostComposerProps) => {
       },
       postType,
       visibility,
-      organizationId: orgId,
+      organizationId: organizationId,
     };
 
     const result = await createPost(post);
