@@ -47,9 +47,19 @@ export const isLikedPost = async (postId: string, userId: string) => {
 
 export const updatePostLike = async (postId: string, userId: string) => {
   try {
-    const res = await postsApi.put("update-like", {
+    const res = await postsApi.put("/update-like", {
       params: { postId, userId },
     });
+    const data = res.data;
+    return data;
+  } catch (error) {
+    logger.debug("ERROR - ", error);
+  }
+};
+
+export const updatePostView = async (postId: string) => {
+  try {
+    const res = await postsApi.put(`/update-view/${postId}`);
     const data = res.data;
     return data;
   } catch (error) {

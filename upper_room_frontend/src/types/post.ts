@@ -8,7 +8,7 @@ export interface Post {
   stats: {
     likes: number;
     views: number;
-    comments: any[]; // you can replace `any` with a proper Comment type later
+    comments: number;
   };
   author: {
     _id: string;

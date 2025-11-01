@@ -5,18 +5,25 @@ import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { formatDistanceToNow } from "date-fns";
 
-import { LuMessageCircle } from "react-icons/lu";
-import { GrView } from "react-icons/gr";
-
 import { type Post } from "@/types";
 import PostDetail from "./post-detail";
 import LikeButton from "./like-button";
 import { useAuthContext } from "@/contexts";
+import CommentButton from "./comment-button";
+import ViewButton from "./view-button";
+import { updatePostView } from "@/services/post-service";
 
 const PostCard = ({ post }: { post: Post }) => {
-  const [openDetailPopup, setOpenDetailPopup] = useState(false);
+  const [openDetailPopup, setOpenDetailPopup] = useState<boolean>(false);
   const { user } = useAuthContext();
   const userId = user?.uid ?? null;
+
+  const openDetail = async () => {
+    setOpenDetailPopup(true);
+    try {
+      await updatePostView(post._id);
+    } catch (error) {}
+  };
 
   return (
     <>
@@ -39,7 +46,7 @@ const PostCard = ({ post }: { post: Post }) => {
             </div>
           </div>
 
-          <div onClick={() => setOpenDetailPopup(true)}>
+          <div onClick={openDetail}>
             {/* Title */}
             <div className="mt-4 text-base font-medium">
               {post.content.title}
@@ -68,25 +75,28 @@ const PostCard = ({ post }: { post: Post }) => {
 
           {/* Reactions */}
           <div className="flex gap-6 mt-4 text-sm text-muted-foreground">
-            <span className="flex jusitfy-center items-center gap-1">
-              {userId && (
-                <LikeButton
-                  objectId={post._id}
-                  userId={userId}
-                  type="POST"
-                  likeCounts={post.stats.likes}
-                  showCounts
-                />
-              )}
-            </span>
-            <span className="flex jusitfy-center items-center gap-1">
-              <LuMessageCircle />
-              {post.stats.comments.length}
-            </span>
-            <span className="flex jusitfy-center items-center gap-1">
-              <GrView />
-              {post.stats.views}
-            </span>
+            {userId && (
+              <>
+                <span className="flex jusitfy-center items-center gap-1">
+                  <LikeButton
+                    objectId={post._id}
+                    userId={userId}
+                    type="POST"
+                    likeCounts={post.stats.likes}
+                    showCounts
+                  />
+                </span>
+                <span className="flex jusitfy-center items-center gap-1">
+                  <CommentButton
+                    commentCounts={post.stats.comments}
+                    open={openDetail}
+                  />
+                </span>
+                <span className="flex jusitfy-center items-center gap-1">
+                  <ViewButton viewCounts={post.stats.views} open={openDetail} />
+                </span>
+              </>
+            )}
           </div>
         </Card>
       </div>

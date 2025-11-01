@@ -20,6 +20,8 @@ import { LikeButton, Loader } from "@/components";
 import { createComment, getCommentsByPostId } from "@/services/comment-service";
 import { getUser } from "@/services/user-service";
 import { useAuthContext } from "@/contexts/auth-context";
+import CommentButton from "./comment-button";
+import ViewButton from "./view-button";
 // import imageCompression, { type Options } from "browser-image-compression";
 
 type PostDetailProps = {
@@ -33,6 +35,7 @@ const PostDetail = ({ open, onClose, post }: PostDetailProps) => {
   const media = post.content.media ?? [];
   const [currentIndex, setCurrentIndex] = useState(0);
   const [comments, setComments] = useState<Comment[]>([]);
+  const [commentCount, setCommentCount] = useState<number>(post.stats.comments);
   const [loadingComments, setLoadingComments] = useState<boolean>(true);
   const [disableCommentButton, setDisableCommentButton] =
     useState<boolean>(false);
@@ -103,6 +106,7 @@ const PostDetail = ({ open, onClose, post }: PostDetailProps) => {
         authorAvatar: user?.photoURL,
       };
       setComments((prev) => [...prev, newCommentWithAuthor]);
+      setCommentCount((prev) => prev + 1);
     }
     setLoadingComments(false);
   };
@@ -225,6 +229,8 @@ const PostDetail = ({ open, onClose, post }: PostDetailProps) => {
                         showCounts={true}
                         likeCounts={post.stats.likes}
                       />
+                      <CommentButton commentCounts={commentCount} />
+                      <ViewButton viewCounts={post.stats.views} />
                     </div>
                     <div className="flex flex-1 gap-1">
                       <Input
