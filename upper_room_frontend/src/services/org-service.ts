@@ -27,6 +27,19 @@ export const getOrgByName = async (orgName: string): Promise<Org | null> => {
   }
 };
 
+export const getOrgById = async (orgId: string): Promise<Org | null> => {
+  try {
+    const res = await organizationsApi.get(
+      `?orgId=${encodeURIComponent(orgId)}`
+    );
+    logger.debug(`Organization Search Result for ${orgId} : ${res.data}`);
+    return res.data;
+  } catch (err) {
+    logger.error(err);
+    return null;
+  }
+};
+
 export const getMyOrganizations = async (
   userId: string
 ): Promise<IOrganization[] | null> => {
