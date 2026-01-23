@@ -1,4 +1,4 @@
-import { usersApi } from "./api";
+import { usersApi } from "./apis/backend-apis/v1-apis";
 import Logger from "../utils/logger";
 
 const logger = new Logger("/src/services/user-service.ts");

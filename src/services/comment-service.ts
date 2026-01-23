@@ -1,4 +1,4 @@
-import { commentsApi } from "./api";
+import { commentsApi } from "./apis/backend-apis/v1-apis";
 import Logger from "../utils/logger";
 
 const logger = new Logger("/src/services/comment-service.ts");
@@ -18,7 +18,7 @@ export const getCommentsByPostId = async (postId: string) => {
 export const createComment = async (
   comment: string,
   author: string,
-  post: string
+  post: string,
 ) => {
   try {
     const res = await commentsApi.post("", {

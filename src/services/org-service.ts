@@ -1,4 +1,4 @@
-import { organizationsApi } from "./api";
+import { organizationsApi } from "./apis/backend-apis/v1-apis";
 import Logger from "../utils/logger";
 import { type IOrganization } from "@/types";
 const logger = new Logger("/src/services/org-service.ts");
@@ -17,7 +17,7 @@ export interface Org {
 export const getOrgByName = async (orgName: string): Promise<Org | null> => {
   try {
     const res = await organizationsApi.get(
-      `?orgName=${encodeURIComponent(orgName)}`
+      `?orgName=${encodeURIComponent(orgName)}`,
     );
     logger.debug(`Organization Search Result for ${orgName} : ${res.data}`);
     return res.data;
@@ -30,7 +30,7 @@ export const getOrgByName = async (orgName: string): Promise<Org | null> => {
 export const getOrgById = async (orgId: string): Promise<Org | null> => {
   try {
     const res = await organizationsApi.get(
-      `?orgId=${encodeURIComponent(orgId)}`
+      `?orgId=${encodeURIComponent(orgId)}`,
     );
     logger.debug(`Organization Search Result for ${orgId} : ${res.data}`);
     return res.data.org;
@@ -41,14 +41,14 @@ export const getOrgById = async (orgId: string): Promise<Org | null> => {
 };
 
 export const getMyOrganizations = async (
-  userId: string
+  userId: string,
 ): Promise<IOrganization[] | null> => {
   try {
     const res = await organizationsApi.get(
-      `/myorg?userId=${encodeURIComponent(userId)}`
+      `/myorg?userId=${encodeURIComponent(userId)}`,
     );
     logger.debug(
-      `Organizations for member ${userId}: ${JSON.stringify(res.data)}`
+      `Organizations for member ${userId}: ${JSON.stringify(res.data)}`,
     );
     return res.data;
   } catch (err) {

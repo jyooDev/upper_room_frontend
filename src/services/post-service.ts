@@ -1,4 +1,4 @@
-import { postsApi } from "./api";
+import { postsApi } from "./apis/backend-apis/v1-apis";
 import { type IPost } from "@/types";
 import Logger from "../utils/logger";
 
@@ -48,7 +48,7 @@ export const getAllPublicPosts = async () => {
 export const isLikedPost = async (postId: string, userId: string) => {
   try {
     const res = await postsApi.get(
-      `is-liked?postId=${postId}&userId=${userId}`
+      `is-liked?postId=${postId}&userId=${userId}`,
     );
     const data = res.data;
     return data;

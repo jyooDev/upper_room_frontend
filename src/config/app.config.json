@@ -1,6 +1,11 @@
 {
-  "SERVER": {
+  "BACKEND_SERVER": {
     "DEV": "http://localhost:8888/api",
+    "STAGING": "",
+    "PROD": ""
+  },
+  "VOICE_SERVER": {
+    "DEV": "http://localhost:4000/voice-api",
     "STAGING": "",
     "PROD": ""
   },

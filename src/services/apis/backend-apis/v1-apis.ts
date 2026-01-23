@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import config from "../config/config";
+import config from "../../../config/config";
 import { getAuth } from "firebase/auth";
 
 export const usersApi = axios.create({

@@ -6,6 +6,7 @@ import { mockSermons as sermons } from "@/mock/sermon-mock";
 import { useAuthContext, useOrgContext } from "@/contexts";
 import { getUser } from "@/services/user-service";
 import { getOrgById } from "@/services/org-service";
+import { createVoiceRoom } from "@/services/voice-services";
 import Logger from "@/utils/logger";
 
 const MyOrganizationSermons = () => {
@@ -67,9 +68,15 @@ const MyOrganizationSermons = () => {
   /* -----------------------------
    * Handlers
    * ----------------------------- */
-  const handleStartLive = () => {
+  const handleStartLive = async () => {
     // TODO: backend call to create live sermon + LiveKit room
-    setIsSermonLive(true);
+    const data = await createVoiceRoom({
+      roomName: `org-${orgId}-live-sermon`,
+    });
+    if (data) {
+      const token = data["token"];
+      setIsSermonLive(true);
+    }
   };
 
   const handleJoinLive = () => {
@@ -136,11 +143,11 @@ const MyOrganizationSermons = () => {
               isActive={activeSermonId === sermon._id}
               onPlay={() =>
                 setActiveSermonId(
-                  activeSermonId === sermon._id ? null : sermon._id
+                  activeSermonId === sermon._id ? null : sermon._id,
                 )
               }
             />
-          ) : null
+          ) : null,
         )}
       </div>
     </div>
