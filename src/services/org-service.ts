@@ -8,7 +8,7 @@ export interface Org {
   name: string;
   organizer: string;
   pastor?: string;
-  managers?: [string];
+  managers: [string];
   denomination: string;
   members?: [string];
   logoURL?: string;
@@ -33,7 +33,7 @@ export const getOrgById = async (orgId: string): Promise<Org | null> => {
       `?orgId=${encodeURIComponent(orgId)}`
     );
     logger.debug(`Organization Search Result for ${orgId} : ${res.data}`);
-    return res.data;
+    return res.data.org;
   } catch (err) {
     logger.error(err);
     return null;

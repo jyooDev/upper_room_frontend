@@ -1,7 +1,7 @@
 import { createContext, useState, useContext } from "react";
 
 export interface IUser {
-  uid?: string;
+  uid: string;
   displayName?: string;
   firstName?: string;
   middleName?: string;
