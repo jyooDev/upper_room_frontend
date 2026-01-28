@@ -5,8 +5,8 @@ const logger = new Logger("/src/services/user-service.ts");
 
 export const getUser = async (userId: string) => {
   // http://localhost:8888/api/v1/users
-  const data = (await usersApi.get(`/${userId}`)).data;
-  return data;
+  const res = await usersApi.get(`/${userId}`);
+  return res.data.user;
 };
 
 export const userExists = async (email: string) => {

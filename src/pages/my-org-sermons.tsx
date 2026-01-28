@@ -48,8 +48,8 @@ const MyOrganizationSermons = () => {
           getOrgById(orgId),
         ]);
 
-        if (_user?.userRole) {
-          setUserRole(_user.userRole);
+        if (_user.role) {
+          setUserRole(_user.role);
         }
 
         if (org) {

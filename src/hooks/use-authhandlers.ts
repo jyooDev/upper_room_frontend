@@ -19,11 +19,9 @@ const useAuthHandlers = () => {
       logger.debug("logged in user =", _user);
       const exists = await userExists(_user.email as string);
       logger.debug("exists =", exists);
-
       if (exists) {
         logger.debug("UPDATE USERS LAST SEEN AT");
-        const res = await getUser(_user.uid);
-        const user = await res.user;
+        const user = await getUser(_user.uid);
         setUser({
           uid: user._id,
           email: user.email,
