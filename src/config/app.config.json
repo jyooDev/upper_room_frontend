@@ -11,5 +11,10 @@
   },
   "APP_MODE": "DEV",
   "LANGUAGES": ["ko", "en"],
-  "CURRENT_LANG": "en"
+  "CURRENT_LANG": "en",
+  "LIVEKIT_URL": {
+    "DEV": "wss://upperroomvoice-3q77jq34.livekit.cloud",
+    "STAGING": "",
+    "PROD": ""
+  }
 }
