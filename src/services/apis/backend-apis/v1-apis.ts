@@ -70,3 +70,20 @@ commentsApi.interceptors.request.use(async (config) => {
   }
   return config;
 });
+
+export const sermonsApi = axios.create({
+  baseURL: config.serverUrl + "/v1/sermons",
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+sermonsApi.interceptors.request.use(async (config) => {
+  const auth = getAuth();
+  const user = auth.currentUser;
+  if (user) {
+    const token = await user.getIdToken();
+    config.headers["Authorization"] = `Bearer ${token}`;
+  }
+  return config;
+});

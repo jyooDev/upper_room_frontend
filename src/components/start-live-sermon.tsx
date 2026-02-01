@@ -17,18 +17,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
-type StartLiveSessionPayload = {
-  pastorName: string;
-  title: string;
-  visibility: "PUBLIC" | "PRIVATE";
-  originalLanguage: string;
-};
+import { type StartLiveSermonPayload } from "@/types";
 
 type StartLiveSessionDialogProps = {
   open: boolean;
   onClose: () => void;
-  onStartLive: (payload: StartLiveSessionPayload) => void;
+  onStartLive: (payload: StartLiveSermonPayload) => void;
+  organizationId: string;
   isSubmitting?: boolean;
 };
 
@@ -36,6 +31,7 @@ const StartLiveSessionDialog = ({
   open,
   onClose,
   onStartLive,
+  organizationId,
   isSubmitting = false,
 }: StartLiveSessionDialogProps) => {
   const [pastorName, setPastorName] = useState("");
@@ -50,6 +46,7 @@ const StartLiveSessionDialog = ({
     if (!canSubmit) return;
 
     onStartLive({
+      organizationId,
       pastorName,
       title,
       visibility,
