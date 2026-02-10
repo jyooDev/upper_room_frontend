@@ -1,19 +1,43 @@
 import { roomApis } from "./apis/voice-apis";
 import Logger from "../utils/logger";
+import type { VoiceJoinInfo } from "@/types";
 
-const logger = new Logger("/src/services/voice-services.ts");
+const logger = new Logger("voice-services");
 
-export const createVoiceRoom = async (roomPayload: {}) => {
+/**
+ * Get LiveKit join info for the host who just created a sermon.
+ * Call after Backend POST /sermons/start-live returns sermonId.
+ */
+export async function getJoinInfoForHost(
+  sermonId: string,
+): Promise<VoiceJoinInfo | null> {
   try {
-    const res = await roomApis.post("/start-room", {
-      ...roomPayload,
+    const { data } = await roomApis.post<VoiceJoinInfo>("/start-room", {
+      sermonId,
     });
-
-    const data = res.data;
-    logger.debug("VOICE ROOM CREATED - ", data);
+    logger.debug("Voice API start-room:", { roomName: data.roomName });
     return data;
   } catch (error) {
-    logger.error("VOICE ROOM CREATION ERROR - ", error);
-    return false;
+    logger.error("getJoinInfoForHost failed:", error);
+    return null;
   }
-};
+}
+
+/**
+ * Get LiveKit join info to join an existing live sermon as a participant.
+ * Voice API verifies sermon is LIVE via backend.
+ */
+export async function getJoinInfoForSermon(
+  sermonId: string,
+): Promise<VoiceJoinInfo | null> {
+  try {
+    const { data } = await roomApis.post<VoiceJoinInfo>("/join", {
+      sermonId,
+    });
+    logger.debug("Voice API join:", { roomName: data.roomName });
+    return data;
+  } catch (error) {
+    logger.error("getJoinInfoForSermon failed:", error);
+    return null;
+  }
+}

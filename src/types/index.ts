@@ -1,7 +1,9 @@
 export {
   type ISermon,
+  type Sermon,
   type Transcript,
   type StartLiveSermonPayload,
+  type VoiceJoinInfo,
 } from "./sermon.ts";
 export { type IPost, type Post } from "./post.ts";
 export { type IOrganization } from "./organization.ts";
