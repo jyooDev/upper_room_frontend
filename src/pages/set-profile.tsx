@@ -147,8 +147,8 @@ const SetProfile = () => {
       // store
       setUser({
         uid: user.uid,
-        displayName: user.displayName,
-        email: user.email,
+        displayName: user.displayName ?? undefined,
+        email: user.email ?? undefined,
       });
 
       navigate("/");
@@ -240,7 +240,7 @@ const SetProfile = () => {
   );
 };
 
-const NameFormEntries = ({ visible, register, errors }) => {
+const NameFormEntries = ({ visible, register, errors }: { visible: boolean; register: any; errors: any }) => {
   const fields = [
     { name: "firstName", required: true },
     { name: "middleName", required: false },
@@ -285,7 +285,7 @@ const NameFormEntries = ({ visible, register, errors }) => {
   );
 };
 
-const OptionalFormEntries = ({ visible, register, setValue }) => {
+const OptionalFormEntries = ({ visible, register, setValue }: { visible: boolean; register: any; setValue: any }) => {
   const [gender, setGender] = useState("");
   console.log(gender);
 
@@ -360,7 +360,7 @@ const OptionalFormEntries = ({ visible, register, setValue }) => {
   );
 };
 
-const UsernameEntry = ({ visible, register, errors }) => {
+const UsernameEntry = ({ visible, register, errors }: { visible: boolean; register: any; errors: any }) => {
   return (
     <div
       className={`space-y-4 w-full flex flex-col justify-center items-center ${

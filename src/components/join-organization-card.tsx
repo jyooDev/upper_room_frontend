@@ -10,7 +10,7 @@ interface JoinOrganizationCardProps {
 
 const JoinOrganizationCard: React.FC<JoinOrganizationCardProps> = ({
   orgName,
-  orgId,
+  orgId: _orgId,
   logoImage,
   onJoinClick,
 }) => {

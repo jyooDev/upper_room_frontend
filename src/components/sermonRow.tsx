@@ -4,7 +4,9 @@ import { useForm } from "react-hook-form";
 import { FaPlay } from "react-icons/fa";
 import { CiGlobe, CiPen } from "react-icons/ci";
 import { FiBook, FiGlobe } from "react-icons/fi";
-import { type Sermon, type Transcript } from "@/types";
+import { type Sermon } from "@/types";
+
+type TranscriptLink = { language: string; url: string };
 import { AudioPlayer } from "@/components";
 
 type NoteForm = {
@@ -16,11 +18,9 @@ const SermonRow: React.FC<{
   onPlay: () => void;
   isActive: boolean;
 }> = ({ sermon, onPlay, isActive }) => {
-  const [currentTranscript, setCurrentTranscript] = useState<Transcript | null>(
-    null
-  );
+  const [currentTranscript, setCurrentTranscript] = useState<TranscriptLink | null>(null);
 
-  const { register, handleSubmit, reset } = useForm<NoteForm>();
+  const { register, handleSubmit } = useForm<NoteForm>();
 
   const handleSaveNote = (data: NoteForm) => {
     console.log("Saved Note:", data.note);
@@ -32,7 +32,7 @@ const SermonRow: React.FC<{
       <div className="flex flex-row justify-between items-center w-1/2 h-full bg-gray-100 rounded p-3 overflow-x-hidden">
         <div className="flex flex-col w-4/5 h-full justify-start gap-2">
           <div className="flex justify-start items-center gap-1 text-xs">
-            <div>{sermon.createdAt.split("T")[0]}</div>
+            <div>{(sermon.createdAt ?? "").split("T")[0]}</div>
             <div className="bg-gray-600 px-2 py-1 rounded-xl text-white">
               PASTOR NAME
             </div>
@@ -73,7 +73,7 @@ const SermonRow: React.FC<{
         <div className="flex flex-row h-full justify-between items-center w-1/2 rounded p-3 overflow-x-hidden">
           <div className="flex flex-col w-4/5 h-full justify-start gap-2">
             <div className="flex justify-start items-center gap-1 text-xs">
-              <div>{sermon.createdAt.split("T")[0]}</div>
+              <div>{(sermon.createdAt ?? "").split("T")[0]}</div>
               <div className="bg-gray-600 px-2 py-1 rounded-xl text-white">
                 PASTOR NAME
               </div>
@@ -88,16 +88,16 @@ const SermonRow: React.FC<{
           </div>
         </div>
         <div className="flex-1 h-full">
-          <AudioPlayer audioUrl={sermon.audioUrl} />
+          {sermon.audioUrl ? <AudioPlayer audioUrl={sermon.audioUrl} /> : <div className="w-full h-full flex items-center justify-center text-sm text-gray-400">No audio available</div>}
         </div>
       </div>
       <div className="flex flex-row w-full h-full max-h-[calc(100%-8rem)] gap-4 rounded justify-center items-center">
         <div className="w-1/2 h-full flex flex-col p-3 bg-gray-50 rounded overflow-hidden">
           <div className="flex items-center">
-            {sermon.transcripts.map((transcript) => (
+            {(sermon.transcripts ?? []).map((transcript) => (
               <button
                 className={`py-1 px-2 flex items-center gap-1 ${
-                  currentTranscript == transcript && "bg-gray-700 text-white"
+                  currentTranscript?.language === transcript.language && "bg-gray-700 text-white"
                 }`}
                 onClick={() => setCurrentTranscript(transcript)}
               >
@@ -112,7 +112,7 @@ const SermonRow: React.FC<{
           </div>
           <span className="w-full border-t border-gray-300"></span>
           <div className="mt-2 flex-1 h-full overflow-y-auto text-sm text-gray-800 whitespace-pre-line pr-2">
-            {currentTranscript?.content}
+            {currentTranscript ? currentTranscript.url : null}
           </div>
         </div>
         <form
@@ -135,7 +135,7 @@ const SermonRow: React.FC<{
             {...register("note")}
             className="mt-3 w-full flex-1 resize-none border border-gray-300 rounded p-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400"
             placeholder={`Write your note here...`}
-            value={"---ADD SERMON NOTE ELEMENT IN DB----"}
+            defaultValue={""}
           />
         </form>
       </div>
