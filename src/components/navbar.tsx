@@ -2,7 +2,6 @@ import { useNavigate } from "react-router";
 import { Link } from "react-scroll";
 import { Link as L } from "react-router";
 
-import { useLogger } from "../hooks";
 import { useAuthContext } from "../contexts/auth-context";
 import { ProfileDropdown } from ".";
 
@@ -11,7 +10,6 @@ interface HomeNavBarProps {
 }
 
 const HomeNavBar: React.FC<HomeNavBarProps> = ({ isHome }) => {
-  const logger = useLogger("src/components/Navbar.tsx");
   const { isLoggedIn, isLoading } = useAuthContext();
   const navigate = useNavigate();
 

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { Link as L, useNavigate } from "react-router";
 import { useForm } from "react-hook-form";
